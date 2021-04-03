@@ -1,28 +1,28 @@
 let puppeteer = require('puppeteer');
-let {email,password}= require('../../secrets');
+let {email,password}= require('../../secrets'); // get email-id nd pw
 
 let gtab; // To store reference of the New-Tab 
-
 console.log("before");
-//browser launch
+
+//  Browser Instance
 let browserWillBeLaunchedPromise= puppeteer.launch({
-  headless:false ,  // to make the browser visible
+  headless:false ,                              // to make the browser visible
   defaultViewport:null,
   args:["--start-maximized"],
 });
 
 browserWillBeLaunchedPromise
-  .then(function (browserInstance){   // Launch the browser
+  .then(function (browserInstance){                 // Launch the browser
     let newTabPromise = browserInstance.newPage();  // create new Tab
     return newTabPromise;
   })
-  .then(function (newTab){          // Redirected to New Tab/Page
+  .then(function (newTab){    // In New Tab
     let loginPagePromise= newTab.goto(`https://www.hackerrank.com/auth/login?h_l=body_middle_left_button&h_r=login`);
 
     gtab=newTab;  // reference of the New-Tab formed
     return loginPagePromise;
   })
-  .then(function (){                // Go-to Login-Page
+  .then(function (){        // At Login-Page
     
     let emailTypedPromise=gtab.type(`#input-1`, email, {delay: 100}); // type username
     return emailTypedPromise;
