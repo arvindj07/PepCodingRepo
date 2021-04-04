@@ -15,3 +15,10 @@
   * https://pptr.dev/
 ## Functional Programming
 * https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0
+
+##  Promises
+* Promises
+  Book
+    https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20&%20performance/README.md#you-dont-know-js-async--performance Read First 2 three chapters from here
+    Live tutorial : http://latentflip.com/loupe
+* https://youtu.be/fyGSyqEX2dw

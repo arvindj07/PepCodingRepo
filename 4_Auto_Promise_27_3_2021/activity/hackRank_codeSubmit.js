@@ -51,7 +51,7 @@ browserWillBeLaunchedPromise
     return combinedPromise;
   })
   .then(function (){
-    // After navigation to the page, wait for the page to be visible i.e, wait for the selector at that Page, which is found after the page is visible
+    // After navigation to the page, wait for the page to be visible i.e, wait for the selector at that Page, which is found after the selector is visible
     let warmUpElementPromise= gtab.waitForSelector(`a[data-attr1="warmup"]`, {visible:true});
     return warmUpElementPromise;
   })
@@ -63,7 +63,7 @@ browserWillBeLaunchedPromise
     let combinedPromise= Promise.all(
       [warmUpClickPromise,
       gtab.waitForNavigation({waitUntil:"networkidle0"}),
-      socketMerchantElementPromise ]);  // we can combine the waitSelector() promise ,here also
+      socketMerchantElementPromise ]);  // we can combine the waitForSelector() promise ,here also
 
     console.log("Inside Interview Kit");
 
