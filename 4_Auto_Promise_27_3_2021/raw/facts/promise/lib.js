@@ -7,17 +7,17 @@ function analyzedata(product, cb) {
         cb();
     }, 2000);
 }
-// function promisifiedAnalyzedata(product) {
-//     return new Promise(function (resolve, reject) {
-//         setTimeout(function () {
-//             // kdjdhvbjdhvbbv
-//             // dfdvjdfbvjhdf
-//             resolve();
-//         }, 2000);
-//     })
+function promisifiedAnalyzedata(product) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            // kdjdhvbjdhvbbv
+            // dfdvjdfbvjhdf
+            resolve();
+        }, 2000);
+    })
 
-// }
+}
 module.exports = {
     analyzedata: analyzedata,
-    // promisifiedAnalyzedata: promisifiedAnalyzedata
+    promisifiedAnalyzedata: promisifiedAnalyzedata
 };
