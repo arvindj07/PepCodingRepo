@@ -4,7 +4,7 @@ let {email,password}= require('../../secrets'); // get email-id nd pw
 let gtab; // To store reference of the New-Tab 
 console.log("before");
 
-//  Browser Instance
+//  Browser launch kra
 let browserWillBeLaunchedPromise= puppeteer.launch({
   headless:false ,                              // to make the browser visible
   defaultViewport:null,
@@ -12,26 +12,30 @@ let browserWillBeLaunchedPromise= puppeteer.launch({
 });
 
 browserWillBeLaunchedPromise
-  .then(function (browserInstance){                 // Launch the browser
+  .then(function (browserInstance){    
+    //  New-Tab open kiya             
     let newTabPromise = browserInstance.newPage();  // create new Tab
     return newTabPromise;
   })
-  .then(function (newTab){    // In New Tab
+  .then(function (newTab){    
+    //   New-Tab ke andhar Login-Page open kiya
     let loginPagePromise= newTab.goto(`https://www.hackerrank.com/auth/login?h_l=body_middle_left_button&h_r=login`);
 
     gtab=newTab;  // reference of the New-Tab formed
     return loginPagePromise;
   })
-  .then(function (){        // At Login-Page
-    
+  .then(function (){        
+    //   Username type kiya   
     let emailTypedPromise=gtab.type(`#input-1`, email, {delay: 100}); // type username
     return emailTypedPromise;
   })
   .then(function (){
+    //  Password type kiya
     let passwordTypedPromimse=gtab.type(`#input-2`, password, {delay: 100}); // type password
     return passwordTypedPromimse;
   })
   .then(function (){
+    //  Login pe click krdiya
     let loginPageClickPromise=gtab.click(`button[data-analytics="LoginPassword"]`); // click on      
                                                                                     //Submit-form
     let combinedPromise= Promise.all([loginPageClickPromise,
