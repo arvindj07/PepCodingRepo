@@ -68,6 +68,9 @@ function waitAndClick(selector){
       .then(function(){
           resolve();    // jb dono kaam ho jaye(i.e, wait nd click), call resolve()
       })
+      .catch(function(err){   // to catch any error
+        reject(err);
+      })
   })
 }
 
