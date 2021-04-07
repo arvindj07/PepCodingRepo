@@ -42,6 +42,7 @@ browserWillBeLaunchedPromise
       gtab.waitForNavigation({waitUnitil:"networkidle0"})]);
 
     return combinedPromise;
+
   })
   .then(function (){    //  Logged-In and Reached DashBoard
     
@@ -90,5 +91,20 @@ browserWillBeLaunchedPromise
  .catch(function (err){
     console.log(err);
   })
+
+  // promise-based func-> to wait for selector nd then click on it
+  function waitAndClick(selector){
+    return new Promise(function(resolve,reject){
+      // wait for selector
+      let selectorWaitPromise= gtab.waitForSelector(selector,{visible:true});
+      selectorWaitPromise
+        .then(function(){
+            return gtab.click(selector);  // click on selector
+        })
+        .then(function(){
+            resolve();    // jb dono kaam ho jaye(i.e, wait nd click), call resolve()
+        })
+    })
+  }
 
   console.log("After");
