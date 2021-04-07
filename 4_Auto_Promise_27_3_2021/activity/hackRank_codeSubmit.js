@@ -36,75 +36,39 @@ browserWillBeLaunchedPromise
   })
   .then(function (){
     //  Login pe click krdiya
-    let loginPageClickPromise=gtab.click(`button[data-analytics="LoginPassword"]`); // click on      
-                                                                                    //Submit-form
-    let combinedPromise= Promise.all([loginPageClickPromise,
-      gtab.waitForNavigation({waitUnitil:"networkidle0"})]);
-
-    return combinedPromise;
-
+    let loginPageClickPromise=gtab.click(`button[data-analytics="LoginPassword"]`); 
+    return loginPageClickPromise;
   })
-  .then(function (){    //  Logged-In and Reached DashBoard
-    
-    let interviewKitClickPromise=gtab.click(`.card-content h3[title="Interview Preparation Kit"]`);
-
-    let combinedPromise= Promise.all(
-      [interviewKitClickPromise,
-      gtab.waitForNavigation({waitUntil:"networkidle0"}) ]);
-    
-    console.log("Logged-IN and at DashBoard");
-    return combinedPromise;
+  .then(function (){ 
+    // Interview-Kit pe click kiya    
+    let interviewKitClickPromise=waitAndClick(`a[href="/interview/interview-preparation-kit"]`);
+    return interviewKitClickPromise;
   })
   .then(function (){
-    // After navigation to the page, wait for the page to be visible i.e, wait for the selector at that Page, which is found after the selector is visible
-    let warmUpElementPromise= gtab.waitForSelector(`a[data-attr1="warmup"]`, {visible:true});
-    return warmUpElementPromise;
+    // Warm-up challenges pe Click kiya
+    let warmUpClickPromise=waitAndClick(`a[data-attr1="warmup"]`);
+    return warmUpClickPromise;
   })
   .then(function (){
-
-    let warmUpClickPromise=gtab.click(`a[data-attr1="warmup"]`);
-    let socketMerchantElementPromise= gtab.waitForSelector(`a[data-attr1="sock-merchant"]`, {visible:true});
-
-    let combinedPromise= Promise.all(
-      [warmUpClickPromise,
-      gtab.waitForNavigation({waitUntil:"networkidle0"}),
-      socketMerchantElementPromise ]);  // we can combine the waitForSelector() promise ,here also
-
-    console.log("Inside Interview Kit");
-
-    return combinedPromise;
-  })
-  .then(function (){
-    let saleByMatchClickPromise=gtab.click(`a[data-attr1="sock-merchant"]`);
-
-    let combinedPromise= Promise.all([saleByMatchClickPromise,
-      gtab.waitForNavigation({waitUntil:"networkidle0"})]);
-
     console.log("Inside Warm-Up Challenge");
-
-    return combinedPromise;
-  })
-  .then(function (){
-    
-    console.log("Inside Sales By Match");
   })
  .catch(function (err){
     console.log(err);
   })
 
-  // promise-based func-> to wait for selector nd then click on it
-  function waitAndClick(selector){
-    return new Promise(function(resolve,reject){
-      // wait for selector
-      let selectorWaitPromise= gtab.waitForSelector(selector,{visible:true});
-      selectorWaitPromise
-        .then(function(){
-            return gtab.click(selector);  // click on selector
-        })
-        .then(function(){
-            resolve();    // jb dono kaam ho jaye(i.e, wait nd click), call resolve()
-        })
-    })
-  }
+// promise-based func-> to wait for selector nd then click on it
+function waitAndClick(selector){
+  return new Promise(function(resolve,reject){
+    // wait for selector
+    let selectorWaitPromise= gtab.waitForSelector(selector,{visible:true});
+    selectorWaitPromise
+      .then(function(){
+          return gtab.click(selector);  // click on selector
+      })
+      .then(function(){
+          resolve();    // jb dono kaam ho jaye(i.e, wait nd click), call resolve()
+      })
+  })
+}
 
   console.log("After");
