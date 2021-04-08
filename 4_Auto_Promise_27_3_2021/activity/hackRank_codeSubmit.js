@@ -1,5 +1,6 @@
 let puppeteer = require('puppeteer');
 let {email,password}= require('../../secrets'); // get email-id nd pw
+let { codes } = require("./code");
 
 let gtab; // To store reference of the New-Tab 
 console.log("before");
@@ -54,7 +55,10 @@ browserWillBeLaunchedPromise
   })
   .then(function (url){
     console.log(url);
-    
+    let quesnObj= codes[0];
+
+    // call questionSolver, to solve each code
+    questionSolver(url,quesnObj.soln, quesnObj.qName);
   })
  .catch(function (err){
     console.log(err);
@@ -76,6 +80,42 @@ function waitAndClick(selector){
         reject(err);
       })
   })
+}
+
+function questionSolver(modulePageurl, code, questionName){
+  return new Promise(function (resolve,reject){
+
+    // warm-up wale pg pe jana ,i.e, module-page
+    let reachedPageUrlPromise= gtab.goto(modulePageurl);
+    reachedPageUrlPromise
+      .then(function (){
+
+        // the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
+        function browserConsoleRun(questionName){
+          let allH4Ele= document.querySelectorAll("h4");
+          let textArr=[];
+
+          for(let i=0;i<allH4Ele.length;i++){
+            let myQuestion= allH4Ele[i].innerText.split("\n")[0]; // only get question-name part
+            textArr.push(myQuestion);
+          }
+
+          //   to match with quesntioname passed from local-file
+          let idx=textArr.indexOf(questionName);
+          console.log(idx);
+          allH4Ele[idx].click();  // to click on that matching Question element 
+        }
+
+        // evaluate() method ,helps to run the code in func-browserConsoleRun inside browser console
+        let quesnClickPromise= gtab.evaluate(browserConsoleRun,questionName);
+        return quesnClickPromise;
+      })
+      .then(function(){
+        // after click on quesn, resolve the promise
+        resolve();
+      })
+
+  });
 }
 
   console.log("After");
