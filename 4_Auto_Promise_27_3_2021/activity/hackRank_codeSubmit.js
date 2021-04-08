@@ -180,4 +180,12 @@ function selectQuestionFn(questionName){
 
 }
 
+// code submit
+function codeSubmit(code){
+  let editor= document.querySelector(`.monaco-editor.no-user-select.vs`);
+  editor.innerHTML=code;
+  let submitButton=document.querySelector(`.pull-right.btn.btn-primary.hr-monaco-submit`);
+  submitButton.click();
+}
+
   console.log("After");
