@@ -80,8 +80,7 @@ function waitAndClick(selector){
   })
 }
 
-
-// function- to solve Each Question
+// function- to solve Each question
 function questionSolver(modulePageurl, code, questionName){
   return new Promise(function (resolve,reject){
     // warm-up wale pg pe jana ,i.e, module-page
@@ -89,37 +88,21 @@ function questionSolver(modulePageurl, code, questionName){
 
     reachedPageUrlPromise
       .then(function (){
-        // Task of func-selectQuestionFn -> select the Given-Question: questionName
+        // Func task -> select the Given-Question: questionName, and click on it from browser
         let quesnClickPromise= gtab.evaluate(selectQuestionFn,questionName);
         return quesnClickPromise;
       })
       .then(function (){
-        // wait nd click on check-box of custom-input
-        return waitAndClick(`.custom-checkbox.inline`); // after click on check-box, cursor directly moves to    
-                                                        //text-area
-      })
-      .then(function (){
-        // type code, inside custom-input text-Area
-        return gtab.type(`.custominput`,code);
-      })
-      .then(function (){
-        // Press and Hold Ctrl-key
-        return gtab.keyboard.down('Control');
-      })
-      .then(function (){
-        // Press A -> Select All
-        return gtab.keyboard.press('A');
-      })
-      .then(function (){
-        // Press X -> Cut the Code
-        return gtab.keyboard.press('X');
+        // type nd then Copy the code from Custom-Input Text-Area
+        let typeAndCopyCodePromise= typeAndCopyCode(code);
+        return typeAndCopyCodePromise;
       })
       .then(function (){
         // Wait nd click on Editor i.e, Monaco-editor
         return waitAndClick(`.monaco-editor.no-user-select.vs`);
       })
       .then(function (){
-        // Press A -> Select All pre-existing code in editor
+        // Press A -> Select All 
         return gtab.keyboard.press('A');
       })
       .then(function (){
@@ -144,6 +127,40 @@ function questionSolver(modulePageurl, code, questionName){
 
   });
 }
+
+// Type nd then Copy Code from Custom-Input Text-Area
+function typeAndCopyCode(code){
+  return new Promise(function(resolve,reject){
+    // wait nd click on check-box of custom-input
+    let clickCheckBox=waitAndClick(`.custom-checkbox.inline`);// after click on check-box, cursor directly moves 
+                                                              //to text-area
+    clickCheckBox
+    .then(function (){
+      // type code, inside custom-input text-Area
+      return gtab.type(`.custominput`,code);
+    })
+    .then(function (){
+      // Press and Hold Ctrl-key
+      return gtab.keyboard.down('Control');
+    })
+    .then(function (){
+      // Press A -> Select All
+      return gtab.keyboard.press('A');
+    })
+    .then(function (){
+      // Press X -> Cut the Code
+      return gtab.keyboard.press('X');
+    })
+    .then(function (){
+      resolve();  // call resolve, when all done
+    })
+    .catch(function (err){
+      reject(err);
+    })
+
+  })
+}
+
 
 // the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
 // Func task- It will match the question passed from local with the question on pg and then click on it
