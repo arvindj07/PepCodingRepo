@@ -51,9 +51,7 @@ browserWillBeLaunchedPromise
     return warmUpClickPromise;
   })
   .then(function (){
-    return gtab.url();  // return url of warm-up page
-  })
-  .then(function (url){
+    let url=gtab.url();  // url of warm-up page
     console.log(url);
     let quesnObj= codes[0];
 
@@ -114,6 +112,9 @@ function questionSolver(modulePageurl, code, questionName){
       .then(function(){
         // after click on quesn, resolve the promise
         resolve();
+      })
+      .catch(function (err){
+        reject(err);
       })
 
   });
