@@ -55,7 +55,7 @@ browserWillBeLaunchedPromise
     console.log(url);
     let quesnObj= codes[0];
 
-    // call questionSolver, to solve each code
+    // call questionSolver, to solve each Question
     questionSolver(url,quesnObj.soln, quesnObj.qName);
   })
  .catch(function (err){
@@ -80,6 +80,8 @@ function waitAndClick(selector){
   })
 }
 
+
+// function- to solve Each Question
 function questionSolver(modulePageurl, code, questionName){
   return new Promise(function (resolve,reject){
     // warm-up wale pg pe jana ,i.e, module-page
@@ -87,27 +89,50 @@ function questionSolver(modulePageurl, code, questionName){
 
     reachedPageUrlPromise
       .then(function (){
-        // the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
-    // Func task- It will match the question passed from local with the question on pg and then click on it
-        function submitQuestionFn(questionName){
-          let allH4Ele= document.querySelectorAll("h4");
-          let textArr=[];
-
-          for(let i=0;i<allH4Ele.length;i++){
-            let myQuestion= allH4Ele[i].innerText.split("\n")[0]; // only get question-name part
-            myQuestion=myQuestion.trim();
-            textArr.push(myQuestion);
-          }
-          //   to match with quesntioname passed from local-file
-          let idx=textArr.indexOf(questionName);
-          console.log(idx);
-          allH4Ele[idx].click();  // to click on that matching Question element 
-
-        }
-
-        // evaluate() method ,helps to run the code in func-browserConsoleRun inside browser console
-        let quesnClickPromise= gtab.evaluate(submitQuestionFn,questionName);
+        // Task of func-selectQuestionFn -> select the Given-Question: questionName
+        let quesnClickPromise= gtab.evaluate(selectQuestionFn,questionName);
         return quesnClickPromise;
+      })
+      .then(function (){
+        // wait nd click on check-box of custom-input
+        return waitAndClick(`.custom-checkbox.inline`); // after click on check-box, cursor directly moves to    
+                                                        //text-area
+      })
+      .then(function (){
+        // type code, inside custom-input text-Area
+        return gtab.type(`.custominput`,code);
+      })
+      .then(function (){
+        // Press and Hold Ctrl-key
+        return gtab.keyboard.down('Control');
+      })
+      .then(function (){
+        // Press A -> Select All
+        return gtab.keyboard.press('A');
+      })
+      .then(function (){
+        // Press X -> Cut the Code
+        return gtab.keyboard.press('X');
+      })
+      .then(function (){
+        // Wait nd click on Editor i.e, Monaco-editor
+        return waitAndClick(`.monaco-editor.no-user-select.vs`);
+      })
+      .then(function (){
+        // Press A -> Select All pre-existing code in editor
+        return gtab.keyboard.press('A');
+      })
+      .then(function (){
+        // Press V -> Paste our code
+        return gtab.keyboard.press('V');
+      })
+      .then(function (){
+        // Release Ctrl-key
+        return gtab.keyboard.up('Control');
+      })
+      .then(function (){
+        // Click on submit Button
+        return waitAndClick(`.pull-right.btn.btn-primary.hr-monaco-submit`);
       })
       .then(function(){
         // after click on quesn, resolve the promise
@@ -118,6 +143,24 @@ function questionSolver(modulePageurl, code, questionName){
       })
 
   });
+}
+
+// the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
+// Func task- It will match the question passed from local with the question on pg and then click on it
+function selectQuestionFn(questionName){
+  let allH4Ele= document.querySelectorAll("h4");
+  let textArr=[];
+
+  for(let i=0;i<allH4Ele.length;i++){
+    let myQuestion= allH4Ele[i].innerText.split("\n")[0]; // only get question-name part
+    myQuestion=myQuestion.trim();
+    textArr.push(myQuestion);
+  }
+  //   to match with quesntioname passed from local-file
+  let idx=textArr.indexOf(questionName);
+  console.log(idx);
+  allH4Ele[idx].click();  // to click on that matching Question element 
+
 }
 
   console.log("After");
