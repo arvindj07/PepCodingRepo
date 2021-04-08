@@ -50,14 +50,18 @@ browserWillBeLaunchedPromise
     return warmUpClickPromise;
   })
   .then(function (){
-    console.log("Inside Warm-Up Challenge");
+    return gtab.url();  // return url of warm-up page
+  })
+  .then(function (url){
+    console.log(url);
+    
   })
  .catch(function (err){
     console.log(err);
   })
 
 // promise-based func-> to wait for selector nd then click on it
-function waitAndClick(selector){
+function waitAndClick(selector){  
   return new Promise(function(resolve,reject){
     // wait for selector
     let selectorWaitPromise= gtab.waitForSelector(selector,{visible:true});
