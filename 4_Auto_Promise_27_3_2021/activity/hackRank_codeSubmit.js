@@ -84,30 +84,31 @@ function waitAndClick(selector){
 
 function questionSolver(modulePageurl, code, questionName){
   return new Promise(function (resolve,reject){
-
     // warm-up wale pg pe jana ,i.e, module-page
     let reachedPageUrlPromise= gtab.goto(modulePageurl);
+
     reachedPageUrlPromise
       .then(function (){
-
         // the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
-        function browserConsoleRun(questionName){
+    // Func task- It will match the question passed from local with the question on pg and then click on it
+        function submitQuestionFn(questionName){
           let allH4Ele= document.querySelectorAll("h4");
           let textArr=[];
 
           for(let i=0;i<allH4Ele.length;i++){
             let myQuestion= allH4Ele[i].innerText.split("\n")[0]; // only get question-name part
+            myQuestion=myQuestion.trim();
             textArr.push(myQuestion);
           }
-
           //   to match with quesntioname passed from local-file
           let idx=textArr.indexOf(questionName);
           console.log(idx);
           allH4Ele[idx].click();  // to click on that matching Question element 
+
         }
 
         // evaluate() method ,helps to run the code in func-browserConsoleRun inside browser console
-        let quesnClickPromise= gtab.evaluate(browserConsoleRun,questionName);
+        let quesnClickPromise= gtab.evaluate(submitQuestionFn,questionName);
         return quesnClickPromise;
       })
       .then(function(){
