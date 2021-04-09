@@ -1,5 +1,5 @@
 module.exports = {
-    codes : [
+    codes : [ 
         {
             qName : "Sales by Match",
             soln : `#include <bits/stdc++.h>
