@@ -1,6 +1,6 @@
 let puppeteer = require('puppeteer');
 let {email,password}= require('../../secrets'); // get email-id nd pw
-let { codes } = require("./code");
+let { codes } = require("./codes");
 
 let gtab; // To store reference of the New-Tab 
 console.log("before");
@@ -56,7 +56,18 @@ browserWillBeLaunchedPromise
     let quesnObj= codes[0];
 
     // call questionSolver, to solve each Question
-    questionSolver(url,quesnObj.soln, quesnObj.qName);
+    let fqsp=questionSolver(url,quesnObj.soln, quesnObj.qName);
+
+    for(let i=1;i<codes.length;i++){
+      fqsp=fqsp.then(function (){
+        return questionSolver(url,codes[i].soln,codes[i].qName);  // return promise
+      })
+    }
+
+    return fqsp;
+  })
+  .then(function (){
+    console.log("All question submitted");
   })
  .catch(function (err){
     console.log(err);
