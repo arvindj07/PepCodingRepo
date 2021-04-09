@@ -18,6 +18,8 @@ console.log("before");
 // function cb3(data) {
 //     console.log("content->" + data);
 // }
+
+
 // improvement
 let frp = fs.readFile("../f1.txt");
 frp.then(cb).then(cb2).then(cb3).catch(function (err) {

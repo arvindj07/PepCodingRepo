@@ -64,7 +64,7 @@ browserWillBeLaunchedPromise
       })
     }
 
-    return fqsp;
+    return fqsp;  // remember to return the promise
   })
   .then(function (){
     console.log("All question submitted");
