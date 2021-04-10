@@ -1,21 +1,26 @@
 let puppeteer = require("puppeteer");
 let fs = require("fs");
+// Links of 3-Sites
 let links = ["https://www.amazon.in", "https://www.flipkart.com", "https://paytmmall.com/"];
 let pName = process.argv[2];    // take product name as input from console
 
 console.log("Before");
 (async function () {
     try {
+        // launch browser
+        // browser instance
         let browserInstance = await puppeteer.launch({
             headless: false,
             defaultViewport: null,
             args: ["--start-maximized"]
         });
-        let AmazonDetails = await getListingFromAmazon(links[0], browserInstance, pName);
-        console.table(AmazonDetails);
+        // Get Amazon Details
+        let AmazonDetailsArr = await getListingFromAmazon(links[0], browserInstance, pName);
+        console.table(AmazonDetailsArr);
 
-        let FlipkartDetails=await getListingFromFlipkart(links[1], browserInstance, pName);
-        console.table(FlipkartDetails);
+        // Get Flipkart Details
+        let FlipkartDetailsArr=await getListingFromFlipkart(links[1], browserInstance, pName);
+        console.table(FlipkartDetailsArr);
 
 
     } catch (err) {
@@ -23,8 +28,8 @@ console.log("Before");
     }
 })();
 
-//  product Name,url of amazon home page
-// output-> top 5 matching product -> price Name print 
+//  input->url of site, browser Instance, product Name
+//  output-> top 5 matching product -> Name and Price 
 async function getListingFromAmazon(link, browserInstance, pName) {
 
     try {
@@ -48,6 +53,7 @@ async function getListingFromAmazon(link, browserInstance, pName) {
     }
 }
 
+// get Top5 Flipkart Product Details
 async function getListingFromFlipkart(link, browserInstance, pName) {
     try {
         let gtab = await browserInstance.newPage();
@@ -63,7 +69,7 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
         // wait for selector nd then evaluate
         await gtab.waitForSelector(nameSelector);
         await gtab.waitForSelector(priceSelector);
-        // return Promise, resolved value of this promise will contain array returned by 'getProductNames' func
+        // return Promise. resolved value of this promise will contain array returned by 'getProductNames' func
         return await gtab.evaluate(getProductNames, nameSelector, priceSelector);
 
 
@@ -72,28 +78,32 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
     }
 }
 
+// wait nd then click the selector
 async function waitAndClick(selector, gtab) {
     await gtab.waitForSelector(selector, { visible: true });
     let clickPromise = gtab.click(selector);
     return clickPromise;
 }
 
+// Get product Names and Price using DOM
 function getProductNames(nameSelector, priceSelector) {
     let details = []; // Array of objects
 
-    let productNames = document.querySelectorAll(nameSelector);
-    let productPrices = document.querySelectorAll(priceSelector);  // start from idx 1
+    let productNames = document.querySelectorAll(nameSelector); // product name element
+    let productPrices = document.querySelectorAll(priceSelector);  // product price element
 
+    // get Details of Top-5 Products
     for (let i = 0; i < 5; i++) {
-        let p_name = productNames[i].innerText;
-        let p_price = productPrices[i].innerText;
+        let p_name = productNames[i].innerText;     // product name
+        let p_price = productPrices[i].innerText;   // product price
 
+        // store as array of object
         details.push({
             p_name,
             p_price
         })
     }
 
-    return details;
+    return details; // return array of product details
 }
 
