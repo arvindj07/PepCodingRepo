@@ -46,6 +46,7 @@ console.log("before");
 // promise-based func-> to wait for selector nd then click on it
 async function waitAndClick(selector, gtab) {
   await gtab.waitForSelector(selector, { visible: true });
+  // we didnt await the below promimse , coz we want the calling person to await this promise-based async func
   let clickPromise = gtab.click(selector);  // click on selector
   return clickPromise;  // return Promise
 
