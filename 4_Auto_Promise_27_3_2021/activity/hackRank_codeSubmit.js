@@ -1,6 +1,6 @@
 let puppeteer = require('puppeteer');
 let {email,password}= require('../../secrets'); // get email-id nd pw
-let { codes } = require("./codes");
+let { codes } = require("./codes"); // locally stored code-soln
 
 let gtab; // To store reference of the New-Tab 
 console.log("before");
