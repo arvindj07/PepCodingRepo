@@ -16,11 +16,17 @@ console.log("Before");
         });
         // Get Amazon Details
         let AmazonDetailsArr = await getListingFromAmazon(links[0], browserInstance, pName);
-        console.table(AmazonDetailsArr);
-
+        
         // Get Flipkart Details
         let FlipkartDetailsArr=await getListingFromFlipkart(links[1], browserInstance, pName);
+        
+        // Get PaytmMall Details
+        let paytmArr = await getListingFromPaytm(links[2], browserInstance, pName);
+
+        // Print all Details in table format
+        console.table(AmazonDetailsArr);
         console.table(FlipkartDetailsArr);
+        console.table(paytmArr);
 
 
     } catch (err) {
@@ -76,6 +82,35 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
     } catch (err) {
         console.log(err);
     }
+}
+
+// Sir ka code, to get Top 5 Product from PaytmMall
+async function getListingFromPaytm(link, browserInstance, pName) {
+    let newPage = await browserInstance.newPage();
+    await newPage.goto(link);
+    await newPage.type("#searchInput",pName,{ delay: 200 });
+    await newPage.keyboard.press("Enter",{ delay: 200 });
+    await newPage.keyboard.press("Enter");
+    await newPage.waitForSelector(".UGUy", { visible: true });
+    await newPage.waitForSelector("._1kMS", { visible: true });
+    function consoleFn(priceSelector, pNameSelector) {
+        let priceArr = document.querySelectorAll(priceSelector);
+        let PName = document.querySelectorAll(pNameSelector);
+        let details = [];
+        for (let i = 0; i < 5; i++) {
+            let price = priceArr[i].innerText;
+            let Name = PName[i].innerText;
+            details.push({
+                price, Name
+            })
+        }
+        return details;
+    }
+    return newPage.evaluate(consoleFn,
+        "._1kMS",
+        ".UGUy");
+
+
 }
 
 // wait nd then click the selector
