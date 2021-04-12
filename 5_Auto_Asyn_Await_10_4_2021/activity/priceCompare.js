@@ -16,10 +16,10 @@ console.log("Before");
         });
         // Get Amazon Details
         let AmazonDetailsArr = await getListingFromAmazon(links[0], browserInstance, pName);
-        
+
         // Get Flipkart Details
         let FlipkartDetailsArr=await getListingFromFlipkart(links[1], browserInstance, pName);
-        
+
         // Get PaytmMall Details
         let paytmArr = await getListingFromPaytm(links[2], browserInstance, pName);
 
@@ -27,6 +27,16 @@ console.log("Before");
         console.table(AmazonDetailsArr);
         console.table(FlipkartDetailsArr);
         console.table(paytmArr);
+
+        // // Parallelly opening 3-Tabs
+
+        // let AmazonDetailsArr = getListingFromAmazon(links[0], browserInstance, pName);
+        // let FlipkartDetailsArr = getListingFromFlipkart(links[1], browserInstance, pName);
+        // let paytmArr = getListingFromPaytm(links[2], browserInstance, pName);
+
+        // // await for combined-promises nd get the resultant Array of Product details
+        // await Promise.all([AmazonDetailsArr, FlipkartDetailsArr, paytmArr]);
+        
 
 
     } catch (err) {
@@ -48,10 +58,15 @@ async function getListingFromAmazon(link, browserInstance, pName) {
         let priceSelector = `.a-price-whole`;   // product-price selector
 
         // wait for selector nd then evaluate
-        await gtab.waitForSelector(nameSelector);   
-        await gtab.waitForSelector(priceSelector);  
+        await gtab.waitForSelector(nameSelector);
+        await gtab.waitForSelector(priceSelector);
         // return Promimse, resolved value of this promise will contain array returned by 'getProductNames' func
-        return await gtab.evaluate(getProductNames, nameSelector, priceSelector);
+        return gtab.evaluate(getProductNames, nameSelector, priceSelector);
+
+        // Parallel
+        // let arr = await gtab.evaluate(getProductNames, nameSelector, priceSelector);
+        // console.table(arr);
+        // return gtab.close();
 
 
     } catch (err) {
@@ -66,7 +81,7 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
         await gtab.goto(link);
         await waitAndClick(`button[class="_2KpZ6l _2doB4z"]`, gtab);    // click-close of pop-up
         // type product name
-        await gtab.type(`input[title="Search for products, brands and more"]`, pName, { delay: 100 });  
+        await gtab.type(`input[title="Search for products, brands and more"]`, pName, { delay: 100 });
         await waitAndClick(`button[type="submit"]`, gtab);  // click on search
 
         let nameSelector = `a[class="s1Q9rs"]`;     // product-name selector
@@ -76,8 +91,12 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
         await gtab.waitForSelector(nameSelector);
         await gtab.waitForSelector(priceSelector);
         // return Promise. resolved value of this promise will contain array returned by 'getProductNames' func
-        return await gtab.evaluate(getProductNames, nameSelector, priceSelector);
+        return gtab.evaluate(getProductNames, nameSelector, priceSelector);
 
+        // Parallel
+        // let arr = await gtab.evaluate(getProductNames, nameSelector, priceSelector);
+        // console.table(arr);
+        // return gtab.close();
 
     } catch (err) {
         console.log(err);
@@ -88,8 +107,8 @@ async function getListingFromFlipkart(link, browserInstance, pName) {
 async function getListingFromPaytm(link, browserInstance, pName) {
     let newPage = await browserInstance.newPage();
     await newPage.goto(link);
-    await newPage.type("#searchInput",pName,{ delay: 200 });
-    await newPage.keyboard.press("Enter",{ delay: 200 });
+    await newPage.type("#searchInput", pName, { delay: 200 });
+    await newPage.keyboard.press("Enter", { delay: 200 });
     await newPage.keyboard.press("Enter");
     await newPage.waitForSelector(".UGUy", { visible: true });
     await newPage.waitForSelector("._1kMS", { visible: true });
@@ -106,11 +125,12 @@ async function getListingFromPaytm(link, browserInstance, pName) {
         }
         return details;
     }
-    return newPage.evaluate(consoleFn,
-        "._1kMS",
-        ".UGUy");
+    return newPage.evaluate(consoleFn,"._1kMS",".UGUy");
 
-
+    // Parallel
+    // let arr = await newPage.evaluate(consoleFn, "._1kMS", ".UGUy");
+    // console.table(arr);
+    // return newPage.close();
 }
 
 // wait nd then click the selector
