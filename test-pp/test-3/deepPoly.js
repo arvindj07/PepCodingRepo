@@ -16,7 +16,8 @@ let superClone = (object) => {
     Object.keys(object).map((prop) => {
         if (Array.isArray(object[prop])) {
             // copy array 
-            // cloning[prop]= object[prop]
+            // cloning[prop]= [].concat(object[prop]);
+            
             // let newArr = [];
             // for (let i = 0; i < object[prop].length; i++) {
             //     newArr.push(object[prop][i]);
