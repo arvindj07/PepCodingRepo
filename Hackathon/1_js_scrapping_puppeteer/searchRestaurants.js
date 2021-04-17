@@ -46,16 +46,19 @@ let email = process.argv[3];
     total = await page.evaluate(scrollPage, leftPaneSelector, nameSelector);
     await page.waitFor(1000);
   }
+  console.log("Page Scrolled");
 
 
   // Get Restaurant Info from DOM
   let resDetails = await page.evaluate(getInfo, nameSelector, ratingSelector, addressSelector);
-  console.table(resDetails);
+  console.log("Scrapped Restaurant Info")
+  // console.table(resDetails);
 
 
   // To create PDF
   let filePath = path.join(__dirname, place + ".pdf");
   createPDF(place, resDetails);
+  console.log("Created PDF");
 
   // Send Email, with Attachments(PDF)
   sendMail(email, place, filePath);
