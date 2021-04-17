@@ -29,31 +29,28 @@ let place=process.argv[2];
   await page.waitForSelector(ratingSelector,{visible:true});
   await page.waitForSelector(addressSelector,{visible:true});
   
-  function getInfo(name,rating,address){
-    let resNameArrEle=document.querySelectorAll(name);      // Name elements
-    let resRatingArrEle=document.querySelectorAll(rating);  // Rating elements
-    let resAddressArrEle=document.querySelectorAll(address);// Address elements
 
-    let resNameDetailsArr=[];   // Restaurant Details
-    for(let i=0;i<resNameArrEle.length;i++){
-      let restaurantName=resNameArrEle[i].innerText;
-      let restaurantRating=resRatingArrEle[i].innerText.split(" ")[0];  // split to get only rating
-      let restaurantAddress=resAddressArrEle[i].innerText;
+  
 
-      let details={
-        name:restaurantName,
-        rating:restaurantRating,
-        address:restaurantAddress
-      }
-      resNameDetailsArr.push(details);
-    }
-
-    return resNameDetailsArr; // Array of Objects
+  function scrollPage(sel,nameSelector){
+    let ele=document.querySelectorAll(sel);
+    ele[1].scrollTop=ele[1].scrollHeight;
+    let resNameArrEle=document.querySelectorAll(nameSelector);      // Name elements
+    console.log(resNameArrEle.length);
+    return resNameArrEle.length
   }
 
-  // Get Restaurant Info from DOM
-  let resDetails=await page.evaluate(getInfo,nameSelector,ratingSelector,addressSelector);
-  console.log(resDetails);
+  let total=0,prev=-1;
+  let divSel=`div[role="region"]`;
+  while(prev!=total){
+    prev=total;
+    total=await page.evaluate(scrollPage,divSel,nameSelector);
+    await page.waitFor(1000);
+    
+  }
+  
+  console.log(total);
+  
 
   
 })();
