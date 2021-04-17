@@ -44,8 +44,15 @@ let place=process.argv[2];
   let divSel=`div[role="region"]`;
   while(prev!=total){
     prev=total;
+    // await page.waitForNavigation({
+    //   waitUntil: 'networkidle0',
+    // });
+    // await page.waitForNavigation({
+    //   waitUntil: 'domcontentloaded',
+    // });
     total=await page.evaluate(scrollPage,divSel,nameSelector);
-    await page.waitFor(1000);
+    await page.waitFor(1000);    
+    
     
   }
   
