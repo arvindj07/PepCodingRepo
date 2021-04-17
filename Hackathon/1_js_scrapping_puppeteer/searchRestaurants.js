@@ -4,21 +4,26 @@ let PDFDocument = require("pdfkit");
 let path = require("path");
 let nodemailer = require("nodemailer");
 
+let {auth_email,password}= require("./secret");
+
 let place = process.argv[2];
+let email = process.argv[3];
 
 // Main-code
 (async function () {
+  // Browser-instance
   let browserInstance = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
     args: ["--start-maximized"]
   });
 
+  // Page-Instance
   let page = await browserInstance.newPage();
-  await page.goto("https://www.google.com/maps"); // gogle-maps
-
+  await page.goto("https://www.google.com/maps"); // google-maps
   await page.waitFor(2000);
-  // Search- Restaurant Nearby
+
+  // Search- Restaurant 
   let restaurant = "restaurants near " + place;
   await page.waitForSelector(`input[aria-label="Search Google Maps"]`, { visible: true });
   await page.type(`input[aria-label="Search Google Maps"]`, restaurant);
@@ -30,16 +35,10 @@ let place = process.argv[2];
   let addressSelector = `div[class="tYZdQJV9xeh__info-line"]>div[jsinstance="0"]`;
 
   await page.waitForSelector(nameSelector, { visible: true });
-  
+  await page.waitForSelector(ratingSelector, { visible: true });
+  await page.waitForSelector(addressSelector, { visible: true });
 
-  function scrollPage(leftPane, nameSelector) {
-    let ele = document.querySelectorAll(leftPane);  // left-Pane Element
-    ele[1].scrollTop = ele[1].scrollHeight;
-    let resNameArrEle = document.querySelectorAll(nameSelector);      // Name elements
-    console.log(resNameArrEle.length);
-    return resNameArrEle.length
-  }
-
+  // ScrollPage
   let total = 0, prev = -1;
   let leftPaneSelector = `div[role="region"]`;
   while (prev != total) {
@@ -49,45 +48,54 @@ let place = process.argv[2];
   }
 
 
-  function getInfo(name, rating, address) {
-    let resNameArrEle = document.querySelectorAll(name);      // Name elements
-    let resRatingArrEle = document.querySelectorAll(rating);  // Rating elements
-    let resAddressArrEle = document.querySelectorAll(address);// Address elements
-
-    let resNameDetailsArr = [];   // Restaurant Details
-    for (let i = 0; i < resNameArrEle.length; i++) {
-      let restaurantName = resNameArrEle[i]==undefined?"": resNameArrEle[i].innerText;
-      let restaurantRating =resRatingArrEle[i]==undefined?"": resRatingArrEle[i].innerText.split(" ")[0];  // split to get only rating
-      let restaurantAddress = resAddressArrEle[i]==undefined?"":resAddressArrEle[i].innerText;
-
-      let details = {
-        Restaurant: restaurantName,
-        Rating: restaurantRating,
-        Address: restaurantAddress
-      }
-      resNameDetailsArr.push(details);
-    }
-
-    return resNameDetailsArr; // Array of Objects
-  }
-
-  await page.waitFor(1000);
   // Get Restaurant Info from DOM
-  await page.waitForSelector(ratingSelector, { visible: true });
-  await page.waitForSelector(addressSelector, { visible: true });
   let resDetails = await page.evaluate(getInfo, nameSelector, ratingSelector, addressSelector);
   console.table(resDetails);
 
-  let data = JSON.stringify(resDetails);
 
   // To create PDF
-  // let filePath = path.join(__dirname, place + ".pdf");
-  // let pdfDoc = new PDFDocument;
-  // pdfDoc.pipe(fs.createWriteStream(filePath));
-  // pdfDoc.text(data);
-  // pdfDoc.end();
-  
+  let filePath = path.join(__dirname, place + ".pdf");
+  createPDF(place, resDetails);
 
+  // Send Email, with Attachments(PDF)
+  sendMail(email, place, filePath);
+
+})();
+
+// Scroll-Page
+function scrollPage(leftPane, nameSelector) {
+  let ele = document.querySelectorAll(leftPane);  // left-Pane Element
+  ele[1].scrollTop = ele[1].scrollHeight;
+  let resNameArrEle = document.querySelectorAll(nameSelector);      // Name elements
+  console.log(resNameArrEle.length);
+  return resNameArrEle.length
+}
+
+// Get Info Of Restaurants
+function getInfo(name, rating, address) {
+  let resNameArrEle = document.querySelectorAll(name);      // Name elements
+  let resRatingArrEle = document.querySelectorAll(rating);  // Rating elements
+  let resAddressArrEle = document.querySelectorAll(address);// Address elements
+
+  let resNameDetailsArr = [];   // Restaurant Details
+  for (let i = 0; i < resNameArrEle.length; i++) {
+    let restaurantName = resNameArrEle[i] == undefined ? "" : resNameArrEle[i].innerText;
+    let restaurantRating = resRatingArrEle[i] == undefined ? "" : resRatingArrEle[i].innerText.split(" ")[0];  // split to get only rating
+    let restaurantAddress = resAddressArrEle[i] == undefined ? "" : resAddressArrEle[i].innerText;
+
+    let details = {
+      Restaurant: restaurantName,
+      Rating: restaurantRating,
+      Address: restaurantAddress
+    }
+    resNameDetailsArr.push(details);
+  }
+
+  return resNameDetailsArr; // Array of Objects
+}
+
+// Create PDF
+function createPDF(place, resDetails) {
   let filePath = path.join(__dirname, place + ".pdf");
   let pdfDoc = new PDFDocument;
   pdfDoc.pipe(fs.createWriteStream(filePath));
@@ -101,9 +109,9 @@ let place = process.argv[2];
     // let d=JSON.stringify(arr[i]);
     let str = `${counter}.`;
     for (let key in resDetails[i]) {
-      if (key == "name") {
+      if (key == "Restaurant") {
         str += key + " : " + resDetails[i][key];
-        pdfDoc.fillColor('blue').font('Helvetica-Bold').text(str);
+        pdfDoc.fillColor('navy').font('Helvetica-Bold').text(str);
       } else {
         str += key + " : " + resDetails[i][key];
         pdfDoc.fillColor('black').font('Helvetica-Bold').text(str);
@@ -113,32 +121,36 @@ let place = process.argv[2];
     }
     pdfDoc.moveDown(1);
     counter++;
+
+    if(counter==11){
+      pdfDoc.addPage();
+    }
   }
 
   pdfDoc.end();
 
-  // Send Email, with Attachments(PDF)
-  //step-1
+}
+
+// Send E-mail
+function sendMail(email, place, filePath) {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'heathledgerakajoker@gmail.com',
-      pass: 'ledger2008'
+      user: auth_email,
+      pass: password
     }
   });
 
-  //step-2
   let mailOptions = {
-    from: 'heathledgerakajoker@gmail.com',
-    to: 'tommycruise1997@gmail.com',
-    subject: 'TesTing and Test',
-    text: 'Mail Send',
+    from: auth_email,
+    to: email,
+    subject: 'Restaurant List',
+    text: `The Restaurants near ${place} has been sent , please check the attached PDF`,
     attachments: [
       { filename: `${place}.pdf`, path: filePath }
     ]
   }
 
-  //step-3
   transporter.sendMail(mailOptions, function (err, data) {
     if (err) {
       console.log("error " + err);
@@ -146,6 +158,4 @@ let place = process.argv[2];
       console.log("Mail sent successfully!!");
     }
   })
-
-
-})();
+}
