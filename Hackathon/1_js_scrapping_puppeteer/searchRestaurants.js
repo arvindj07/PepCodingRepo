@@ -2,7 +2,7 @@ let fs = require("fs");
 let puppeteer = require("puppeteer");
 let PDFDocument = require("pdfkit");
 let path = require("path");
-let nodemailer= require("nodemailer");
+let nodemailer = require("nodemailer");
 
 let place = process.argv[2];
 
@@ -30,8 +30,7 @@ let place = process.argv[2];
   let addressSelector = `div[class="tYZdQJV9xeh__info-line"]>div[jsinstance="0"]`;
 
   await page.waitForSelector(nameSelector, { visible: true });
-  await page.waitForSelector(ratingSelector, { visible: true });
-  await page.waitForSelector(addressSelector, { visible: true });
+  
 
   function scrollPage(leftPane, nameSelector) {
     let ele = document.querySelectorAll(leftPane);  // left-Pane Element
@@ -57,14 +56,14 @@ let place = process.argv[2];
 
     let resNameDetailsArr = [];   // Restaurant Details
     for (let i = 0; i < resNameArrEle.length; i++) {
-      let restaurantName = resNameArrEle[i].innerText;
-      let restaurantRating = resRatingArrEle[i].innerText.split(" ")[0];  // split to get only rating
-      let restaurantAddress = resAddressArrEle[i].innerText;
+      let restaurantName = resNameArrEle[i]==undefined?"": resNameArrEle[i].innerText;
+      let restaurantRating =resRatingArrEle[i]==undefined?"": resRatingArrEle[i].innerText.split(" ")[0];  // split to get only rating
+      let restaurantAddress = resAddressArrEle[i]==undefined?"":resAddressArrEle[i].innerText;
 
       let details = {
-        name: restaurantName,
-        rating: restaurantRating,
-        address: restaurantAddress
+        Restaurant: restaurantName,
+        Rating: restaurantRating,
+        Address: restaurantAddress
       }
       resNameDetailsArr.push(details);
     }
@@ -72,23 +71,51 @@ let place = process.argv[2];
     return resNameDetailsArr; // Array of Objects
   }
 
+  await page.waitFor(1000);
   // Get Restaurant Info from DOM
+  await page.waitForSelector(ratingSelector, { visible: true });
+  await page.waitForSelector(addressSelector, { visible: true });
   let resDetails = await page.evaluate(getInfo, nameSelector, ratingSelector, addressSelector);
   console.table(resDetails);
 
   let data = JSON.stringify(resDetails);
 
   // To create PDF
+  // let filePath = path.join(__dirname, place + ".pdf");
+  // let pdfDoc = new PDFDocument;
+  // pdfDoc.pipe(fs.createWriteStream(filePath));
+  // pdfDoc.text(data);
+  // pdfDoc.end();
+  
+
   let filePath = path.join(__dirname, place + ".pdf");
   let pdfDoc = new PDFDocument;
   pdfDoc.pipe(fs.createWriteStream(filePath));
-  pdfDoc.text(data);
-  pdfDoc.end();
 
-  // To create json file
-  createFile(place);
-  let filePath2 = path.join(__dirname, place + ".json");
-  fs.writeFileSync(filePath2, data);
+  pdfDoc.fontSize(25).font('Times-Roman').fillColor('red').text("List Of Restaurants:");
+  pdfDoc.moveDown(1);
+
+  pdfDoc.fontSize(10);
+  let counter = 1;
+  for (let i = 0; i < resDetails.length; i++) {
+    // let d=JSON.stringify(arr[i]);
+    let str = `${counter}.`;
+    for (let key in resDetails[i]) {
+      if (key == "name") {
+        str += key + " : " + resDetails[i][key];
+        pdfDoc.fillColor('blue').font('Helvetica-Bold').text(str);
+      } else {
+        str += key + " : " + resDetails[i][key];
+        pdfDoc.fillColor('black').font('Helvetica-Bold').text(str);
+      }
+
+      str = "";
+    }
+    pdfDoc.moveDown(1);
+    counter++;
+  }
+
+  pdfDoc.end();
 
   // Send Email, with Attachments(PDF)
   //step-1
@@ -107,7 +134,7 @@ let place = process.argv[2];
     subject: 'TesTing and Test',
     text: 'Mail Send',
     attachments: [
-      { filename:  `${place}.pdf`, path: filePath }
+      { filename: `${place}.pdf`, path: filePath }
     ]
   }
 
@@ -122,12 +149,3 @@ let place = process.argv[2];
 
 
 })();
-
-// Create-File
-function createFile(place) {
-  let pathOfFile = path.join(__dirname, place + ".json");  // create json file for Repo
-  if (fs.existsSync(pathOfFile) == false) {
-    let createStream = fs.createWriteStream(pathOfFile);
-    createStream.end();
-  }
-}

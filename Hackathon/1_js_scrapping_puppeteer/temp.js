@@ -61,3 +61,18 @@ let place=process.argv[2];
 
   
 })();
+
+// Create-File
+
+// To create json file
+// createFile(place);
+// let filePath2 = path.join(__dirname, place + ".json");
+// fs.writeFileSync(filePath2, data);
+
+function createFile(place) {
+  let pathOfFile = path.join(__dirname, place + ".json");  // create json file for Repo
+  if (fs.existsSync(pathOfFile) == false) {
+    let createStream = fs.createWriteStream(pathOfFile);
+    createStream.end();
+  }
+}
