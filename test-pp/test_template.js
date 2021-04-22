@@ -47,3 +47,13 @@
 
 let a="knk";
 console.log(typeof(a))
+
+// function fn(){
+//   console.log("hi");
+//   while(true){
+
+//   }
+//   return 10;
+// }
+
+// console.log(fn());
