@@ -1,0 +1,27 @@
+body{
+  margin: 0;
+}
+
+.input_container{
+  height: 15vh;
+  background-color: lightcoral;
+}
+
+.input_box{
+  font-family: 'Zen Dots', cursive;
+  height: 2rem;
+}
+
+.task_container{
+  height: 85vh;
+  background-color: blue;
+  color: white;
+  text-align: center;
+  font-family: 'Zen Dots', cursive;
+}
+
+li{
+  list-style: none;
+  
+}
+
