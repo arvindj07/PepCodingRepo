@@ -17,7 +17,7 @@ input.addEventListener("keydown",function(e){
       li.remove();  // remove- li element
     })
 
-    ul.appendChild(li);
+    ul.appendChild(li); // append 'li' element to 'ul' in DOM
     input.value=""; // clear Input
   }
 })
