@@ -13,12 +13,17 @@
   * https://peter.sh/experiments/chromium-command-line-switches/
   * DOM: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents
   * https://pptr.dev/
+   * https://github.com/puppeteer/puppeteer/blob/v5.1.0/docs/api.md
 ## Functional Programming
 * https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0
-
-##  Promises
-* Promises
-  Book
-    https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20&%20performance/README.md#you-dont-know-js-async--performance Read First 2 three chapters from here
-    Live tutorial : http://latentflip.com/loupe
-* https://youtu.be/fyGSyqEX2dw
+# Promises
+* https://github.com/getify/You-Dont-Know-JS/blob/1st-ed/async%20&%20performance/README.md#you-dont-know-js-async--performance Read First 3 three chapters from here
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
+* https://github.com/kriskowal/q/blob/v1/design/README.md
+* https://www.youtube.com/watch?v=fyGSyqEX2dw&t=1311s
+## Browser
+### DOM
+* https://developer.mozilla.org/en-US/docs/Web/Events
+* https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents
