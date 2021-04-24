@@ -1,27 +1,52 @@
+*{
+  box-sizing: border-box;
+}
+
 body{
   margin: 0;
+  background-color: #1a1a31;
 }
 
 .input_container{
   height: 15vh;
-  background-color: lightcoral;
 }
 
 .input_box{
   font-family: 'Zen Dots', cursive;
   height: 2rem;
+  display: block;
+  margin: 0 auto;
+  margin-top: 2rem;
+  width: 40vw;  /*media-queries*/
 }
 
 .task_container{
   height: 85vh;
-  background-color: blue;
   color: white;
   text-align: center;
   font-family: 'Zen Dots', cursive;
 }
 
-li{
+.instruction{
+  font-size: 1.5rem;
+}
+
+.task{
   list-style: none;
-  
+  margin: 0 auto;
+  height: 2rem;
+  width: 60vw;
+  padding: 0.5rem;
+  background-color: blue;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+
+}
+
+ /* Media-Queries */
+@media screen and (max-width:884px) {
+  .input_box{
+    width: 60vw;
+  }
 }
 
