@@ -90,7 +90,7 @@ function createTask(color,task){
     <div class="task-desc">${task}</div>
   </div>`;
 
-  mainContainer.appendChild(taskCard);  // append Task-card to Main-Container
+  mainContainer.appendChild(taskCard);  // append Task-card to Main-Container 
 }
 
 
