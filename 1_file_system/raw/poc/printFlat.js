@@ -31,7 +31,6 @@ function viewFlat(dirPath){
     //get children
     let children=readContent(dirPath);
 
-    // console.log("children: ",children); // to check the content of children
 
     // recursive call for Children in Current Directory
     for(let i=0;i<children.length;i++){
