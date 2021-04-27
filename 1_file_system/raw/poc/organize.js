@@ -1,6 +1,7 @@
 let fs = require("fs");
 let path = require("path");
 
+// File-Types
 let types = {
   media: ["mp4", "mkv", "mp3"],
   archives: ['zip', '7z', 'rar', 'tar', 'gz', 'ar', 'iso', "xz"],
