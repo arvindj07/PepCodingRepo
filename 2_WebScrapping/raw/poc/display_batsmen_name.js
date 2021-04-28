@@ -22,7 +22,8 @@ function extractionHtml(html){
   
   // batsmen table
   for(let i=0;i<batsmenTable.length;i++){
-    let singleInningsBatsmen= selectorTool(batsmenTable[i]).find("tbody tr"); //data of all bowlers at each table,from tr
+    //data of all batsmen at each table,from tr
+    let singleInningsBatsmen= selectorTool(batsmenTable[i]).find("tbody tr"); 
 
     let currteamName= selectorTool(teamNames[i]).text();
     currteamName=currteamName.split('INNINGS')[0];         // To get only the Team Name
