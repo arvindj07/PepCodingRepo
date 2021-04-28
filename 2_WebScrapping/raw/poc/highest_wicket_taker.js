@@ -17,14 +17,18 @@ function cb(err,response,html){
 
 function extractionHtml(html){
   let selectorTool=cheerio.load(html);
-  let bowlerTable= selectorTool(".table.bowler"); // bowlers-table
+  let bowlerTable= selectorTool(".table.bowler"); // array of bowlers-table
 
+  // Initialize ,Max-Wicket nd Name
   let max_wicket=-1;
   let max_name="";
 
+  // Loop on Two Bowler-Table
   for(let i=0;i<bowlerTable.length;i++){
-    let singleInningsBowlers= selectorTool(bowlerTable[i]).find("tbody tr"); //data of all bowlers at each table,from tr
+    //data of all bowlers at each table,from tr
+    let singleInningsBowlers= selectorTool(bowlerTable[i]).find("tbody tr"); 
 
+    // data of Each Bowler
     for(let j=0;j<singleInningsBowlers.length;j++){
       let singleAllCol=selectorTool(singleInningsBowlers[j]).find("td");  // full-data of each bowler,from td
       let name= selectorTool(singleAllCol[0]).text();
@@ -39,7 +43,6 @@ function extractionHtml(html){
     }
 
     console.log("-------------------------------------------");
-
     console.log(`Max-Wicket is taken by ${max_name}, wickets-${max_wicket}`);
   }
   
