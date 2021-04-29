@@ -24,6 +24,7 @@ function createFile(repoName,TopicName){
   }
 }
 
+// ------------------------Start-Point of Code
 request(url,cb);
 function cb(err,response,html){
   if(err){
@@ -40,9 +41,8 @@ function extractTopics(html){
   
   for(let i=0;i<topicsArr.length;i++){
     let link=selectorTool(topicsArr[i]).attr('href');    
-    let fullLink="https://github.com"+link;
+    let fullLink="https://github.com"+link; // Topics-link
 
-    // console.log("Topic-link-> "+fullLink);
     getRepositories(fullLink);    
   }
   
@@ -77,7 +77,6 @@ function extractRepositories(html){
   for(let i=0;i<8;i++){
     let link=selectorTool(RepoLinkArr[i]).attr('href');
     let fullLink=homeUrl+link;
-    // console.log(fullLink);
 
     // Repo-Name will be at the end of the link- fullLink
     let repoName= fullLink.split('/').pop();
