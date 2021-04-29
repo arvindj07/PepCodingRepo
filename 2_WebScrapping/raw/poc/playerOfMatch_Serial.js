@@ -32,7 +32,7 @@ function extractMatch(html){
 
 }
 
-                              // To request for Players-Link Serially
+// To request for Players-Link Serially
 function getPlayerSerially(allLinks,n){
   if(n== allLinks.length){
     return;
