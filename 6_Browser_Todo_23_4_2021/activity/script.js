@@ -6,14 +6,15 @@ let crossBtn = document.querySelector(".task-delete");
 let deleteState = false;
 
 // local-Storage -> array of objects
-let allTasks = []; // allTasks
+let allTasks = []; 
+// if local-Storage contains Task, then to Display it
 if (localStorage.getItem("allTasks")) {
   let arrStr = localStorage.getItem("allTasks");
   allTasks = JSON.parse(arrStr);
 
   for (let i = 0; i < allTasks.length; i++) {
     let { id, color, task } = allTasks[i];
-    // Create Task Initially for already Present
+    // Create Task->for already Present Tasks
     createTask(color, task, false, id);
   }
 }
@@ -31,19 +32,19 @@ for (let i = 0; i < colorBtn.length; i++) {
 plusButton.addEventListener('click', createModal);
 crossBtn.addEventListener('click', setDeleteState);
 
+// call Func
+// SetUp ModalContainer-> EventListners 
+handleModal(modalContainer);
+
 // make Modal visible
 function createModal() {
   modalContainer.style.opacity = 1; // Modal appears
   modalContainer.classList.add("z_index"); // set z-index
-  // handle Modal-Filter and Modal-Content
-  handleModal(modalContainer);
-
-
 }
 
+// handle Modal-Filter and Modal-Content
 function handleModal(modalContainer) {
   // ADD border To Modal-Filter
-
   let cColor = "black"; //default color of Modal-Filter-> current-Color
   let modalFilter = document.querySelectorAll(".modal-filter");
   modalFilter[3].classList.add("border");  // set border of last filter(i.e, black) by default
@@ -67,9 +68,8 @@ function handleModal(modalContainer) {
 
   }
 
-  // press 'Enter' on Modal-Content TextArea
+  // Add eventListner on press->'Enter' on Modal-Content TextArea
   let textArea = document.querySelector('.modal-input');
-
   textArea.addEventListener('keydown', function (e) {
     if (e.key == 'Enter' && textArea.value != '') {
       let task = textArea.value;
@@ -78,9 +78,7 @@ function handleModal(modalContainer) {
       // Create Task-Card on 'Enter'-press
       createTask(cColor, task, true);
 
-      // Set Modal-Container Back To Initial State
-      // i.e Reset Modal-Container
-
+      // Set Modal-Container Back To Initial State i.e Reset Modal-Container
       textArea.value = "";  //Set Content-empty
       // Set default-Filter to 'black'
       modalFilter.forEach((filters) => {
@@ -90,8 +88,6 @@ function handleModal(modalContainer) {
       cColor = 'black';
       modalContainer.style.opacity = 0;// Modal-Container Disappear
       modalContainer.classList.remove("z_index"); // reset-> z-index
-
-
     }
   })
 
@@ -156,9 +152,22 @@ function changeColor(e) {
 
   let idx = colors.indexOf(cColor); // find-idx in array
   let newIdx = (idx + 1) % 4;
+  let newColor=colors[newIdx];
 
   taskFiter.classList.remove(cColor); // remove old-color
-  taskFiter.classList.add(colors[newIdx]);// add new-color
+  taskFiter.classList.add(newColor);// add new-color
+
+  // Update Local-Storage for Color
+  let taskContainer=taskFiter.parentNode;
+  let uid=taskContainer.querySelector(".uid").innerText;
+  for (let i = 0; i < allTasks.length; i++) {
+    let { id } = allTasks[i];
+    if (id == uid) {
+      allTasks[i].color=newColor; // update Task-Desc
+      let data = JSON.stringify(allTasks);
+      localStorage.setItem("allTasks", data);
+    }
+  }
 
 }
 
