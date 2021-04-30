@@ -5,6 +5,7 @@
 
 body{
   font-family: 'Raleway',sans-serif;
+  background-color: #ecf0f1;
 }
 
  /* Navbar  */
@@ -81,6 +82,10 @@ body{
   font-size: 2rem;
 }
 
+.active{
+  background-color:rgb(153, 147, 147);
+}
+
 /* Main Container */
 .main_container{
   height: 90vh;
@@ -97,13 +102,19 @@ body{
   height: 20rem;
   width: 35rem;
   top: 10vh;
-  left: 30vw;
+  /* left: 30vw; */
+  /* Formula to Align to center  */
+  left:((100vw - 35rem)/2); 
   box-shadow: 10px 10px 8px 10px #888888;
   display: flex;
   /* make element invisible */
   opacity: 0; 
-
+  z-index: -1;
   /* border: 1px solid red; */
+}
+
+.z_index{
+  z-index: 2;
 }
 
 .modal-content{
@@ -176,6 +187,9 @@ body{
 }
 
 .task-desc{
+  height: 70%;
+  overflow: auto;
+  word-break: break-all;
   text-align: center;
   font-size: 1.5rem;
 }
