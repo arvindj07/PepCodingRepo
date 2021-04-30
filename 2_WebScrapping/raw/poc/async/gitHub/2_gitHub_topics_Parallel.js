@@ -9,7 +9,7 @@ let homeUrl=`https://github.com`;
 
 console.log("before");
 
-// Ccreate-Directory
+// Create-Directory
 function dirCreator(TopicName){
   let pathOfFolder=path.join(__dirname,TopicName);
   fs.mkdirSync(pathOfFolder, { recursive: true });
@@ -77,7 +77,6 @@ function extractRepositories(html){
   for(let i=0;i<8;i++){
     let link=selectorTool(RepoLinkArr[i]).attr('href');
     let fullLink=homeUrl+link;
-
     // Repo-Name will be at the end of the link- fullLink
     let repoName= fullLink.split('/').pop();
     repoName=repoName.trim();
@@ -96,8 +95,8 @@ function getIssues(fullLink,repoName,TopicName){
   request(url,cb);
   function cb(err,response,html){
     if(err){
-      // if Issue-Page is not found, handle that error
       if(response.statusCode==404){
+        // if Issue-Page doesn't exist, handle that error
         console.log("No issue Page Found");
       }else{
         console.log(err);
@@ -119,18 +118,17 @@ function extractIssues(html,repoName,TopicName){
   for(let i=0;i<allIssueElements.length;i++){
     let issueName= selTool(allIssueElements[i]).text();
     let issueLink=selTool(allIssueElements[i]).attr('href');
-
     let fullLink=homeUrl+issueLink;
-
     // Pushing Objects into Array
     arr.push({
       "Name": issueName,
       "Link":fullLink
     });
   }
-  let data = JSON.stringify(arr);   // Always convert Json to String , to write to a File
-  console.table(arr);
 
+  console.table(arr);
+  
+  let data = JSON.stringify(arr);   // Always convert Json to String , to write to a File
   let filePath= path.join(__dirname,TopicName,repoName+".json");    
   fs.writeFileSync(filePath, data);     // write to json-file
 
