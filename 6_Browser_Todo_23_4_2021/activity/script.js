@@ -97,6 +97,7 @@ function handleModal(modalContainer) {
 function createTask(color, task, flag, id) {
   // parameters, color-> Gives, task-filter bg-color
   // task-> Gives, task-desc
+  // flag-> true- means new Task to be created , false- means just display existing task in local-storage
 
   // create-> unique-id
   let uid;
