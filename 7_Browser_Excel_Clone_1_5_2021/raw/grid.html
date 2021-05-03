@@ -39,7 +39,8 @@
         .col {
             min-width: 80px;
             border: 1px solid;
-            min-height:30px;
+            /* yha bhi min-height dena pdega */
+            min-height:30px;    
             display: flex;
             justify-content: center;
             align-items: center;
@@ -76,12 +77,16 @@
         <div class="grid"></div>
     </div>
     <script>
+        // top-row
         let topRow = document.querySelector(".top-row");
         let str = "";
         for (let i = 0; i < 26; i++) {
+            // add columns to top-row
             str += `<div class='col'>${String.fromCharCode(65 + i)}</div>`;
         }
         topRow.innerHTML = str;
+
+        // left-Column mei 100 left-column box set krdo
         let leftCol = document.querySelector(".left-col");
         str = ""
         for (let i = 0; i < 100; i++) {
@@ -89,12 +94,15 @@
         }
         leftCol.innerHTML = str;
 
-        // 2d array
+        // set Grid cells, like 2D array
         let grid = document.querySelector(".grid");
         str = "";
+        // loop lga ke cells set krna ,for Grid
         for (let i = 0; i < 100; i++) {
+            // row-container for all-cells in a row
             str += `<div class="row">`
             for (let j = 0; j < 26; j++) {
+                // each-cell
                 str += `<div class='col'>${String.fromCharCode(65 + j)}${i + 1}</div>`
             }
             str += "</div>";
