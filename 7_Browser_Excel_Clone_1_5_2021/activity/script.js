@@ -7,7 +7,21 @@ let leftBtn = document.querySelector(".left");
 let rightBtn = document.querySelector(".right");
 let centerBtn = document.querySelector(".center");
 // font-size
-let fontBtn= document.querySelector(".font_size");
+let fontBtn = document.querySelector(".font_size");
+// font-family
+let fontFamilyBtn = document.querySelector(".font_family");
+// background-color
+let bgColor = document.querySelector(".bg_color");
+// foreground-color
+let fgColor = document.querySelector(".fg_color");
+// BUI buttons
+let boldBtn = document.querySelector(".bold");
+let italicBtn = document.querySelector(".italic");
+let underlineBtn = document.querySelector(".underline");
+// states checks on BUI buttons, to reset on clicking it again
+let Bstate=false;
+let Istate=false;
+let Ustate=false;
 
 // Add eventListener on first Sheet
 let firstSheet = document.querySelector(".sheet");
@@ -78,7 +92,7 @@ function alignCell(e) {
   let alignBtn = e.currentTarget;
   // address of clicked-cell
   let address = addressBox.value;
-  let { rid, cid } = getRidCidfrommAddress(address);
+  let { rid, cid } = getRidCidfromAddress(address);
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
   let alignDirec = alignBtn.getAttribute("class");
   cell.style.textAlign = alignDirec;
@@ -86,7 +100,7 @@ function alignCell(e) {
 }
 
 // function to get rid and cid of cell, from address in address-box
-function getRidCidfrommAddress(address) {
+function getRidCidfromAddress(address) {
   // convert char to Ascii code  
   let colAddress = address.charCodeAt(0);
   let rowAddress = address.slice(1);
@@ -94,21 +108,101 @@ function getRidCidfrommAddress(address) {
   let cid = colAddress - 65;
   let rid = Number(rowAddress) - 1;
 
-  return {cid,rid};
+  return { cid, rid };
 }
 
-// Set Font-size, on change->event
-fontBtn.addEventListener("change",setFontSize);
-
-function setFontSize(e){
-  let fontSelectBtn=e.currentTarget;
-  let fontSize=fontSelectBtn.value;
+// To Set Font-size, on change->event
+fontBtn.addEventListener("change", setFontSize);
+//Set Font-size
+function setFontSize(e) {
+  let fontSelectBtn = e.currentTarget;
+  let fontSize = fontSelectBtn.value;
   // address of clicked-cell
   let address = addressBox.value;
-  let { rid, cid } = getRidCidfrommAddress(address);
+  let { rid, cid } = getRidCidfromAddress(address);
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
-  cell.style.fontSize=fontSize+"px";
+  cell.style.fontSize = fontSize + "px";
 
 }
 
+// To Set Font-family on change->event
+fontFamilyBtn.addEventListener("change", setFontFamily);
+//Set Font-family
+function setFontFamily(e) {
+  // get font-family
+  let fontFamilyBtn = e.currentTarget;
+  let fontFamily = fontFamilyBtn.value;
+  // address of clicked-cell
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+  cell.style.fontFamily = fontFamily;
+}
+
+// To Set Background Color on change->event
+bgColor.addEventListener("change", setBgColor);
+//Set Background Color
+function setBgColor(e) {
+  let bgColor = e.currentTarget;
+  let color = bgColor.value;
+  // address of clicked-cell
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+  cell.style.backgroundColor = color;
+}
+
+// To Set Foreground Color on change->event
+fgColor.addEventListener("change", setFgColor);
+//Set Foreground Color
+function setFgColor(e) {
+  let fgColor = e.currentTarget;
+  let color = fgColor.value;
+  // address of clicked-cell
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+  cell.style.color = color;
+}
+
+// addEventListener to B,U,I buttons
+boldBtn.addEventListener("click", setBUI);
+italicBtn.addEventListener("click", setBUI);
+underlineBtn.addEventListener("click", setBUI);
+
+// Set B,U,I of font
+function setBUI(e) {
+  let bui = e.currentTarget;
+  // get style value i.e, bold,underline or italics
+  let fstyle = bui.getAttribute("class");
+  // address of clicked-cell
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+
+  // set Style
+  if (fstyle == "bold") {
+    if(Bstate==false){
+      cell.style.fontWeight = fstyle;
+      Bstate=true;
+    }else{
+      cell.style.fontWeight = "normal";
+      Bstate=false;
+    }
+  } else if (fstyle == "italic") {
+    if(Istate==false){
+      cell.style.fontStyle = fstyle;
+    }else{
+      cell.style.fontStyle="normal";
+    }
+    Istate=!Istate;
+  }else if(fstyle=="underline"){
+    if(Ustate==false){
+      cell.style.textDecoration = fstyle;
+    }else{
+      cell.style.textDecoration = "none";
+    }
+    Ustate=!Ustate;
+  }
+}
 
