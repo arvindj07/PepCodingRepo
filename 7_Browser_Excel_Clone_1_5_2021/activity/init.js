@@ -23,3 +23,28 @@ for (let i = 0; i < 100; i++) {
   str += "</div>";
 }
 grid.innerHTML = str;
+
+// Store-Initial Style of each cell
+//  2D Array-> styling prop
+//  For cell set 
+
+let sheetDB = [];
+
+// 100-rows
+for (let i = 0; i < 100; i++) {
+  let row = [];// array of objects
+  // 26-col
+  for (let j = 0; j < 26; j++) {
+    // obj of each cell-> contains default style of cell
+    let cell = {
+      bold: false,
+      italic: false,
+      underline: false,
+      fontFamily: "Arial",
+      fontSize: "10",
+      halign: "left"  // L,C,R
+    }
+    row.push(cell);
+  }
+  sheetDB.push(row);
+}

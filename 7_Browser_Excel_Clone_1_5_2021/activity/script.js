@@ -18,30 +18,14 @@ let fgColor = document.querySelector(".fg_color");
 let boldBtn = document.querySelector(".bold");
 let italicBtn = document.querySelector(".italic");
 let underlineBtn = document.querySelector(".underline");
-// states checks on BUI buttons, to reset on clicking it again
-let Bstate=false;
-let Istate=false;
-let Ustate=false;
+
+
+// **********************************************************
+//---------------- Sheets-Container
 
 // Add eventListener on first Sheet
 let firstSheet = document.querySelector(".sheet");
 firstSheet.addEventListener("click", handleActiveSheet);
-
-// set clicked-sheet as active_sheet
-function handleActiveSheet(e) {
-  let mySheet = e.currentTarget;// clicked-sheet
-  let sheetsArr = document.querySelectorAll(".sheet");
-  // remove active_sheet class from all Sheets
-  sheetsArr.forEach((sheet) => {
-    sheet.classList.remove("active_sheet");
-  })
-
-  // add active_sheet class to current-Sheet
-  if (!mySheet.classList[1]) {
-    mySheet.classList.add("active_sheet");
-  }
-
-}
 
 // Add eventListener to plus-button to add Sheets
 plusBtn.addEventListener("click", function (e) {
@@ -62,6 +46,25 @@ plusBtn.addEventListener("click", function (e) {
   newSheet.addEventListener("click", handleActiveSheet);
 });
 
+// set clicked-sheet as active_sheet
+function handleActiveSheet(e) {
+  let mySheet = e.currentTarget;// clicked-sheet
+  let sheetsArr = document.querySelectorAll(".sheet");
+  // remove active_sheet class from all Sheets
+  sheetsArr.forEach((sheet) => {
+    sheet.classList.remove("active_sheet");
+  })
+
+  // add active_sheet class to current-Sheet
+  if (!mySheet.classList[1]) {
+    mySheet.classList.add("active_sheet");
+  }
+
+}
+
+// **********************************************************
+//------------------------ Grid-Container and Address-Box
+
 // Add eventListener to all-cells
 for (let i = 0; i < allCells.length; i++) {
   allCells[i].addEventListener("click", handleCell);
@@ -70,7 +73,7 @@ for (let i = 0; i < allCells.length; i++) {
 // 1st cell is clicked by-default
 allCells[0].click();
 
-// Set address of cell in Address-Box, when a cell is clicked
+// Set Address of cell in Address-Box, when a cell is clicked
 function handleCell(e) {
   currCell = e.currentTarget;
   let rid = Number(currCell.getAttribute("rid"));
@@ -79,8 +82,48 @@ function handleCell(e) {
   let colAddress = String.fromCharCode(cid + 65);
   let address = colAddress + rowAddress;
   addressBox.value = address;
+
+  // Initially,remove All-previously set Styles-> by removing active-state
+  // Align-Btns
+  leftBtn.classList.remove("active-btn");
+  rightBtn.classList.remove("active-btn");
+  centerBtn.classList.remove("active-btn");
+
+  // BUI button
+  boldBtn.classList.remove("active-btn");
+  italicBtn.classList.remove("active-btn");
+  underlineBtn.classList.remove("active-btn");
+
+  // Now, Set Styles of Cell
+  // using SheetDB(2d-arr)-> set Properties of clicked-cell
+  let cellObj=sheetDB[rid][cid];
+
+  // Set L,C,R -> halign Property
+  if(cellObj.halign=="left"){
+    leftBtn.classList.add("active-btn");
+  }
+  else if(cellObj.halign=="right"){
+    rightBtn.classList.add("active-btn");
+  }
+  else if(cellObj.halign=="center"){
+    centerBtn.classList.add("active-btn");
+  }
+
+  // Set BUI -> Style Prop
+  if(cellObj.bold==true){
+    boldBtn.classList.add("active-btn");
+  }
+  if(cellObj.italic==true){
+    italicBtn.classList.add("active-btn");
+  }
+  if(cellObj.underline==true){
+    underlineBtn.classList.add("active-btn");
+  }
+
 }
 
+// **********************************************************
+//------------------------Menu-Container(Formatting)
 
 // Add eventListner Alignment-Btn- i.e, L,C,R
 leftBtn.addEventListener("click", alignCell);
@@ -97,18 +140,26 @@ function alignCell(e) {
   let alignDirec = alignBtn.getAttribute("class");
   cell.style.textAlign = alignDirec;
 
-}
+  // 1st , remove active-states from all L,C,R btns
+  leftBtn.classList.remove("active-btn");
+  rightBtn.classList.remove("active-btn");
+  centerBtn.classList.remove("active-btn");
 
-// function to get rid and cid of cell, from address in address-box
-function getRidCidfromAddress(address) {
-  // convert char to Ascii code  
-  let colAddress = address.charCodeAt(0);
-  let rowAddress = address.slice(1);
+  // Set Active-State of L,C,R btn
+  if(alignDirec=="left"){
+    leftBtn.classList.add("active-btn");
+  }
+  else if(alignDirec=="right"){
+    rightBtn.classList.add("active-btn");
+  }
+  else if(alignDirec=="center"){
+    centerBtn.classList.add("active-btn");
+  }
 
-  let cid = colAddress - 65;
-  let rid = Number(rowAddress) - 1;
+  // Update Style in SheetDB- 2D Array
+  let cellObj=sheetDB[rid][cid];
+  cellObj.halign=alignDirec;
 
-  return { cid, rid };
 }
 
 // To Set Font-size, on change->event
@@ -172,37 +223,68 @@ underlineBtn.addEventListener("click", setBUI);
 
 // Set B,U,I of font
 function setBUI(e) {
-  let bui = e.currentTarget;
-  // get style value i.e, bold,underline or italics
-  let fstyle = bui.getAttribute("class");
+  let buiBtn = e.currentTarget;
+  // get style value i.e, bold,underline or italics at 0th-class
+  let fstyle = buiBtn.classList[0];
   // address of clicked-cell
   let address = addressBox.value;
   let { rid, cid } = getRidCidfromAddress(address);
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
 
-  // set Style
+  // To check State of BUI-Btns
+  let isActive=buiBtn.classList.contains("active-btn");
+  // get cell Property Obj-> from sheetDB
+  let cellObj=sheetDB[rid][cid];
+
+  // set Style and Store it in sheetDB-> 2D Array
   if (fstyle == "bold") {
-    if(Bstate==false){
+    // check state to toggle Bold-Btn
+    if(isActive==false){
       cell.style.fontWeight = fstyle;
-      Bstate=true;
+      buiBtn.classList.add("active-btn");
+      // update SheetDB
+      cellObj.bold=true;
     }else{
       cell.style.fontWeight = "normal";
-      Bstate=false;
+      buiBtn.classList.remove("active-btn");
+      // update SheetDB
+      cellObj.bold=false;
     }
   } else if (fstyle == "italic") {
-    if(Istate==false){
+    if(isActive==false){
       cell.style.fontStyle = fstyle;
+      buiBtn.classList.add("active-btn");
+      cellObj.italic=true;
     }else{
       cell.style.fontStyle="normal";
+      buiBtn.classList.remove("active-btn");
+      cellObj.italic=false;
     }
-    Istate=!Istate;
   }else if(fstyle=="underline"){
-    if(Ustate==false){
+    if(isActive==false){
       cell.style.textDecoration = fstyle;
+      buiBtn.classList.add("active-btn");
+      cellObj.underline=true;
     }else{
       cell.style.textDecoration = "none";
+      buiBtn.classList.remove("active-btn");
+      cellObj.underline=false;
     }
-    Ustate=!Ustate;
   }
+}
+
+// **********************************************************
+//------------------------Helper Function
+
+// function to get rid and cid of cell, from address in address-box
+function getRidCidfromAddress(address) {
+  // convert char to Ascii code  
+  let colAddress = address.charCodeAt(0);
+  let rowAddress = address.slice(1);
+
+  let cid = colAddress - 65;
+  let rid = Number(rowAddress) - 1;
+
+  return { cid, rid };
 }
 
