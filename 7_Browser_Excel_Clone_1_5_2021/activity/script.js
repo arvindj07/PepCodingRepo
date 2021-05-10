@@ -2,6 +2,8 @@ let plusBtn = document.querySelector(".plusBtn_container");
 let sheetList = document.querySelector(".sheets_list");
 let allCells = document.querySelectorAll(".grid .col");
 let addressBox = document.querySelector(".address_box");
+// SheetDB of 1st-sheet
+let sheetDB = workSheetDB[0];
 // Align-Buttons
 let leftBtn = document.querySelector(".left");
 let rightBtn = document.querySelector(".right");
@@ -18,6 +20,8 @@ let fgColor = document.querySelector(".fg_color");
 let boldBtn = document.querySelector(".bold");
 let italicBtn = document.querySelector(".italic");
 let underlineBtn = document.querySelector(".underline");
+// Formaula-Container
+let formulaInput = document.querySelector(".formula_box");
 
 
 // **********************************************************
@@ -27,24 +31,58 @@ let underlineBtn = document.querySelector(".underline");
 let firstSheet = document.querySelector(".sheet");
 firstSheet.addEventListener("click", handleActiveSheet);
 
-// Add eventListener to plus-button to add Sheets
+// event at Plus-button to Add-Sheets
 plusBtn.addEventListener("click", function (e) {
   // Get Idx of Last Sheet
   let sheetsArr = document.querySelectorAll(".sheet");
   let lastSheetEle = sheetsArr[sheetsArr.length - 1];
   let idx = lastSheetEle.getAttribute("sheetIdx");
-  idx = Number(idx); // conovert String to Number
+  idx = Number(idx); // convert String to Number
+  let sheetNo = idx + 1;
 
   // Add new Sheet
   let newSheet = document.createElement("div");
   newSheet.setAttribute("class", "sheet");
   newSheet.setAttribute("sheetIdx", idx + 1);
-  newSheet.innerText = `Sheet ${idx + 1}`;
+  newSheet.innerText = `Sheet ${sheetNo + 1}`;
   sheetList.appendChild(newSheet);
+
+  // Create new-SheetDB for New-Sheet
+  initCurrSheetDB();
+
+  // Clear all Cells of New-Sheet
+  initUI();
+
+  // set SheetDB of Curr-Sheet
+  sheetDB = workSheetDB[idx + 1]
+
+  // Set Active-Sheet
+  sheetsArr = document.querySelectorAll(".sheet");
+  sheetsArr.forEach((sheet) => {
+    sheet.classList.remove("active_sheet");
+  })
+  sheetsArr[sheetsArr.length - 1].classList.add("active_sheet");
 
   // Add eventListener on new Sheet
   newSheet.addEventListener("click", handleActiveSheet);
 });
+
+// Initialize UI of sheet
+function initUI() {
+  // Reset Styles of All-cells and Empty content
+  for (let i = 0; i < allCells.length; i++) {
+    // styles
+    allCells[i].style.fontWeight = "normal";
+    allCells[i].style.fontStyle = "normal";
+    allCells[i].style.textDecoration = "none";
+    allCells[i].style.textAlign = "left";
+    allCells[i].style.fontFamily = "Arial";
+    allCells[i].style.fontSize = "16px";
+    // bg nd fg prop
+    //content
+    allCells[i].innerText = "";
+  }
+}
 
 // set clicked-sheet as active_sheet
 function handleActiveSheet(e) {
@@ -60,12 +98,42 @@ function handleActiveSheet(e) {
     mySheet.classList.add("active_sheet");
   }
 
+  // Get SheetDB of clicked-Sheet
+  let idx = mySheet.getAttribute("sheetIdx");
+  sheetDB = workSheetDB[idx];
+
+  // Set data of clicked-Sheet
+  setUI(sheetDB);
+
+
+}
+
+// Set Data of Clicked-Sheet
+function setUI(sheetDB) {
+  for (let i = 0; i < sheetDB.length; i++) {
+    for (let j = 0; j < sheetDB[i].length; j++) {
+      // get cell
+      let cell = document.querySelector(`div[rid="${i}"][cid="${j}"]`);
+      // cell properties
+      let { bold, italic, underline, fontFamily, fontSize, halign, value } = sheetDB[i][j];
+      cell.style.fontWeight = bold == true ? "bold" : "normal";
+      cell.style.fontStyle = italic == true ? "italic" : "normal";
+      cell.style.textDecoration = underline == true ? "underline" : "none";
+      cell.style.textAlign = halign;
+      cell.style.fontFamily = fontFamily;
+      cell.style.fontSize = fontSize;
+      // bg nd fg prop
+      //content
+      cell.innerText = value;
+
+    }
+  }
 }
 
 // **********************************************************
-//------------------------ Grid-Container and Address-Box
+//------------------------ Cell-Functionality and Set Address-Box
 
-// Add eventListener to all-cells
+// Add Click-eventListener to all-cells
 for (let i = 0; i < allCells.length; i++) {
   allCells[i].addEventListener("click", handleCell);
 }
@@ -73,9 +141,10 @@ for (let i = 0; i < allCells.length; i++) {
 // 1st cell is clicked by-default
 allCells[0].click();
 
-// Set Address of cell in Address-Box, when a cell is clicked
+// Handle all Functionality on cell-Click
 function handleCell(e) {
-  currCell = e.currentTarget;
+  // Set Address of cell in Address-Box, when a cell is clicked  
+  let currCell = e.currentTarget;
   let rid = Number(currCell.getAttribute("rid"));
   let cid = Number(currCell.getAttribute("cid"));
   let rowAddress = rid + 1;
@@ -88,36 +157,40 @@ function handleCell(e) {
   leftBtn.classList.remove("active-btn");
   rightBtn.classList.remove("active-btn");
   centerBtn.classList.remove("active-btn");
-
   // BUI button
   boldBtn.classList.remove("active-btn");
   italicBtn.classList.remove("active-btn");
   underlineBtn.classList.remove("active-btn");
 
-  // Now, Set Styles of Cell
+  // Now, Set Styles of clicked-Cell
   // using SheetDB(2d-arr)-> set Properties of clicked-cell
-  let cellObj=sheetDB[rid][cid];
-
+  let cellObj = sheetDB[rid][cid];
   // Set L,C,R -> halign Property
-  if(cellObj.halign=="left"){
+  if (cellObj.halign == "left") {
     leftBtn.classList.add("active-btn");
   }
-  else if(cellObj.halign=="right"){
+  else if (cellObj.halign == "right") {
     rightBtn.classList.add("active-btn");
   }
-  else if(cellObj.halign=="center"){
+  else if (cellObj.halign == "center") {
     centerBtn.classList.add("active-btn");
   }
-
   // Set BUI -> Style Prop
-  if(cellObj.bold==true){
+  if (cellObj.bold == true) {
     boldBtn.classList.add("active-btn");
   }
-  if(cellObj.italic==true){
+  if (cellObj.italic == true) {
     italicBtn.classList.add("active-btn");
   }
-  if(cellObj.underline==true){
+  if (cellObj.underline == true) {
     underlineBtn.classList.add("active-btn");
+  }
+
+  // Set Formula-Box
+  if (cellObj.formula != "") {
+    formulaInput.value = cellObj.formula;
+  } else {
+    formulaInput.value = "";
   }
 
 }
@@ -146,19 +219,19 @@ function alignCell(e) {
   centerBtn.classList.remove("active-btn");
 
   // Set Active-State of L,C,R btn
-  if(alignDirec=="left"){
+  if (alignDirec == "left") {
     leftBtn.classList.add("active-btn");
   }
-  else if(alignDirec=="right"){
+  else if (alignDirec == "right") {
     rightBtn.classList.add("active-btn");
   }
-  else if(alignDirec=="center"){
+  else if (alignDirec == "center") {
     centerBtn.classList.add("active-btn");
   }
 
   // Update Style in SheetDB- 2D Array
-  let cellObj=sheetDB[rid][cid];
-  cellObj.halign=alignDirec;
+  let cellObj = sheetDB[rid][cid];
+  cellObj.halign = alignDirec;
 
 }
 
@@ -183,10 +256,10 @@ function setFontFamily(e) {
   // get font-family
   let fontFamilyBtn = e.currentTarget;
   let fontFamily = fontFamilyBtn.value;
-  // address of clicked-cell
   let address = addressBox.value;
   let { rid, cid } = getRidCidfromAddress(address);
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+  // set font-family
   cell.style.fontFamily = fontFamily;
 }
 
@@ -232,43 +305,199 @@ function setBUI(e) {
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
 
   // To check State of BUI-Btns
-  let isActive=buiBtn.classList.contains("active-btn");
+  let isActive = buiBtn.classList.contains("active-btn");
   // get cell Property Obj-> from sheetDB
-  let cellObj=sheetDB[rid][cid];
+  let cellObj = sheetDB[rid][cid];
 
   // set Style and Store it in sheetDB-> 2D Array
   if (fstyle == "bold") {
+    // bold
     // check state to toggle Bold-Btn
-    if(isActive==false){
+    if (isActive == false) {
       cell.style.fontWeight = fstyle;
       buiBtn.classList.add("active-btn");
       // update SheetDB
-      cellObj.bold=true;
-    }else{
+      cellObj.bold = true;
+    } else {
       cell.style.fontWeight = "normal";
       buiBtn.classList.remove("active-btn");
       // update SheetDB
-      cellObj.bold=false;
+      cellObj.bold = false;
     }
   } else if (fstyle == "italic") {
-    if(isActive==false){
+    // italic
+    if (isActive == false) {
       cell.style.fontStyle = fstyle;
       buiBtn.classList.add("active-btn");
-      cellObj.italic=true;
-    }else{
-      cell.style.fontStyle="normal";
+      cellObj.italic = true;
+    } else {
+      cell.style.fontStyle = "normal";
       buiBtn.classList.remove("active-btn");
-      cellObj.italic=false;
+      cellObj.italic = false;
     }
-  }else if(fstyle=="underline"){
-    if(isActive==false){
+  } else if (fstyle == "underline") {
+    // underline
+    if (isActive == false) {
       cell.style.textDecoration = fstyle;
       buiBtn.classList.add("active-btn");
-      cellObj.underline=true;
-    }else{
+      cellObj.underline = true;
+    } else {
       cell.style.textDecoration = "none";
       buiBtn.classList.remove("active-btn");
-      cellObj.underline=false;
+      cellObj.underline = false;
+    }
+  }
+}
+
+// **********************************************************
+//------------------------Formula Code
+
+// To Store Cell-value in SheetDB
+for (let i = 0; i < allCells.length; i++) {
+  // event-> keyup on all-cells
+  allCells[i].addEventListener("keyup", getCellValue);
+}
+
+// Handles 1. Value->Value and 2. Formula->Value
+// Get inserted value at clicked-Cell and Set in SheetDB
+function getCellValue(e) {
+  // address of clicked-cell, on which you are entering value
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
+  let cellObj = sheetDB[rid][cid];
+  
+  // set Value in SheetDB
+  cellObj.value = cell.innerText;
+  // Handle Formula->Value Operation
+  if (cellObj.formula != "") {
+    // Remove Formula
+    removeFormula(cellObj, address);
+  }
+  // Re-Evaluate Children
+  changeChildren(cellObj);
+
+}
+
+// Re-Evaluate Children
+function changeChildren(cellObject) {
+  // children of Parent-Cell
+  let childrens = cellObject.children;
+  for (let i = 0; i < childrens.length; i++) {
+    let chAddress = childrens[i];
+    // children's rid,cid Obj
+    let chRICIObj = getRidCidfromAddress(chAddress);
+    let chObj = sheetDB[chRICIObj.rid][chRICIObj.cid];
+    let formula = chObj.formula;
+    // Evaluate Children
+    let evaluatedValue = evaluateFormula(formula);
+    // Update Children UI and DB
+    setUIByFormula(evaluatedValue, chRICIObj.rid, chRICIObj.cid);
+    chObj.value = evaluatedValue;
+    // Recursive-call to its children
+    changeChildren(chObj);
+  }
+}
+
+//Remove formula and Remove yourself from Parent's Children-Array
+function removeFormula(cellObject, address) {
+  let formula = cellObject.formula;
+  let formulaTokens = formula.split(" ");
+  // Find Parent-Obj using formula
+  for (let i = 0; i < formulaTokens.length; i++) {
+    let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+    if (firstCharOfToken >= 65 && firstCharOfToken <= 90) {
+      let parentRIdCid = getRidCidfromAddress(formulaTokens[i]);
+      // Parent
+      let parentCellObject = sheetDB[parentRIdCid.rid][parentRIdCid.cid];
+      let childrens = parentCellObject.children;
+      let idx = childrens.indexOf(address);
+      // Remove Itself from Parent's Children-Array
+      childrens.splice(idx, 1);
+    }
+  }
+  // Remove Formula ->DB
+  cellObject.formula = "";
+
+}
+
+// Set Formula for a clicked-Cell
+formulaInput.addEventListener("keydown", formulaIdentify);
+
+// Handles 3.Value->Formula,  4.Formula->Formula
+// Get Formula, evaluate, UI change
+function formulaIdentify(e) {
+  // clicked-cell address
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  let formulaInput = e.currentTarget;
+  if (e.key == "Enter" && formulaInput.value != "") {
+    // get formula
+    let Newformula = formulaInput.value;
+    let cellObj = sheetDB[rid][cid];
+    // Formula->Formula (Operation)
+    let prevFormula = cellObj.formula;
+    if (prevFormula != "" && prevFormula != Newformula) {
+      // remove Previous-Formula
+      removeFormula(cellObj, address);
+    }
+    // evaluate-formula
+    let evaluatedValue = evaluateFormula(Newformula);
+    // UI Change
+    setUIByFormula(evaluatedValue, rid, cid);
+    // Update DB and Set Parent's ChildArray
+    setContentInDB(evaluatedValue, Newformula, rid, cid, address);
+    // Re-Evaluate Children
+    changeChildren(cellObj);
+  }
+}
+
+// evaluate Given-Formula
+function evaluateFormula(formula) {
+  // formula-> "( A1 + A2 )"
+  // split
+  // [(, A1, +, A2,)]
+  let formulaTokens = formula.split(" ");
+  for (let i = 0; i < formulaTokens.length; i++) {
+    let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+    // convert cell to cell-value ,ie, A1 -> 10
+    if (firstCharOfToken >= 65 && firstCharOfToken <= 90) {
+      let { rid, cid } = getRidCidfromAddress(formulaTokens[i]);
+      let cellObject = sheetDB[rid][cid];
+      let { value } = cellObject; // get cell-value
+      // Replace ( A1 + A2) -> ( 10 + 20 )
+      formula = formula.replace(formulaTokens[i], value);
+    }
+  }
+  // infix evaluation-code use krna instead of eval
+  let ans = eval(formula);
+  return ans;
+
+}
+
+// On setting Formula, Set UI of cell
+function setUIByFormula(value, rid, cid) {
+  // set cell-value
+  let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+  cell.innerText = value;
+}
+
+// Update DB and Update Parent's Children Array
+function setContentInDB(value, formula, rid, cid, address) {
+  // Set Formula, Value in DB
+  let cellObject = sheetDB[rid][cid];
+  cellObject.value = value;
+  cellObject.formula = formula;
+  let formulaTokens = formula.split(" ");
+  // Update Parent's Children-Arr using formula-tokens
+  for (let i = 0; i < formulaTokens.length; i++) {
+    let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+    // check for Parent-Cell
+    if (firstCharOfToken >= 65 && firstCharOfToken <= 90) {
+      let parentRIdCid = getRidCidfromAddress(formulaTokens[i]);
+      let cellObject = sheetDB[parentRIdCid.rid][parentRIdCid.cid];
+      //  Update Parent's Children-Arr
+      cellObject.children.push(address)
     }
   }
 }

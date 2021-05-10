@@ -24,27 +24,41 @@ for (let i = 0; i < 100; i++) {
 }
 grid.innerHTML = str;
 
-// Store-Initial Style of each cell
-//  2D Array-> styling prop
-//  For cell set 
+//*************************************************Data of Sheets */
 
-let sheetDB = [];
+// WorkSheetDB -> stores info of each-sheet
+// SheetDB -> stores info of Each-cell in a Sheet
 
-// 100-rows
-for (let i = 0; i < 100; i++) {
-  let row = [];// array of objects
-  // 26-col
-  for (let j = 0; j < 26; j++) {
-    // obj of each cell-> contains default style of cell
-    let cell = {
-      bold: false,
-      italic: false,
-      underline: false,
-      fontFamily: "Arial",
-      fontSize: "10",
-      halign: "left"  // L,C,R
+workSheetDB = [];
+
+// func to initialise Current-Sheet-DB
+// func is Called when new-sheet is created
+function initCurrSheetDB() {
+  // Store-Initial Style of each cell in 2D Array-> SheetDB
+  let sheetDB = [];
+
+  for (let i = 0; i < 100; i++) {
+    let row = [];// array of objects
+    for (let j = 0; j < 26; j++) {
+      // obj of each cell-> contains default style of cell
+      let cell = {
+        // bg,fg
+        bold: false,
+        italic: false,
+        underline: false,
+        fontFamily: "Arial",
+        fontSize: "16",
+        halign: "left",  // L,C,R
+        value: "",
+        children: [],
+        formula: "",
+      }
+      row.push(cell);
     }
-    row.push(cell);
+    sheetDB.push(row);
   }
-  sheetDB.push(row);
+  workSheetDB.push(sheetDB);
+  console.log(workSheetDB);
 }
+
+initCurrSheetDB();  // called to create sheetDB of 1st sheet
