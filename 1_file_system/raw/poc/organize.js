@@ -31,7 +31,7 @@ function readContent(dirPath) {
 }
 
 // Copy File To Destination-Folder
-function copyFileToFolder(dirpath,destFolder){
+functioncopyFileToFolder(dirpath,destFolder){
   let orgFileName= path.basename(dirpath);        // define the name of the file to which content is to be copied
   let destFilePath=path.join(destFolder,orgFileName);   // Destination File-Path
   fs.copyFileSync(dirpath,destFilePath);
@@ -59,7 +59,8 @@ function getDirectoryName(dirpath){
   return "others";
 }
 
-                                    
+  
+// Create Folder for-> File-Types
 let orgFilePath=path.join(dirpath,"organized_files");     //organized file path within dirpath folder
 dirCreator(orgFilePath);                                  // create a folder which contains organized folder
 

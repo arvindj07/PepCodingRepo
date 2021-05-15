@@ -366,7 +366,7 @@ function getCellValue(e) {
   let { rid, cid } = getRidCidfromAddress(address);
   let cell = document.querySelector(`div[rid="${rid}"][cid="${cid}"]`);
   let cellObj = sheetDB[rid][cid];
-  
+
   // set Value in SheetDB
   cellObj.value = cell.innerText;
   // Handle Formula->Value Operation
@@ -500,6 +500,43 @@ function setContentInDB(value, formula, rid, cid, address) {
       cellObject.children.push(address)
     }
   }
+}
+
+// **********************************************************
+//------------------------Handle Styling of Grid
+
+// Height Change in Cells-> Set Left-Col height
+for (let i = 0; i < allCells.length; i++) {
+  allCells[i].addEventListener("keydown", changeCellHeight);
+}
+
+// Set Left-Col height to Cell-Height
+function changeCellHeight(e) {
+  let address = addressBox.value;
+  let { rid, cid } = getRidCidfromAddress(address);
+  // get-height of Current cell
+  let currCell = e.currentTarget;
+  let obj = currCell.getBoundingClientRect();
+  let height = obj.height;
+  // Set height of Left-Col -> Corresponding to cell-height
+  let leftCol = document.querySelectorAll(".left-col .left-col_box")[rid];
+  leftCol.style.height = height + "px";
+}
+
+// Handle Scroll On Grid
+let gridContainer = document.querySelector(".grid_container");
+gridContainer.addEventListener("scroll", handleGridScroll);
+
+// Handle Sticky of Top-Row and Left-Col
+function handleGridScroll(e) {
+  let gridContainer=e.currentTarget;
+  // Get top and left Coordinates of Grid during each-Scroll
+  let top = gridContainer.scrollTop;
+  let left = gridContainer.scrollLeft;
+  // Set Top-Row to Top-Coordinate of Grid
+  topRow.style.top = top + "px";
+  // Set Left-Col to Left-Coordinate of Grid
+  leftCol.style.left = left + "px";
 }
 
 // **********************************************************

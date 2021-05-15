@@ -23,6 +23,7 @@ function viewFlat(dirPath){
   let isFile= isFileChecker(dirPath);
 
   if(isFile){
+    // Base-Case
     console.log(dirPath+"*");
   }else{
     //print Path for current directory

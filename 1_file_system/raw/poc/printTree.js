@@ -6,7 +6,7 @@ function isFileChecker(dirPath) {
   return fs.lstatSync(dirPath).isFile();  //checks whether a File exists in the passed dirPath
 }
 function readContent(dirPath) {
-return fs.readdirSync(dirPath);  //returns File/Directory name array inside dirpath
+return fs.readdirSync(dirPath);  //returns File/Directory name-> array, inside dirpath
 }
 
 // Main-Code
