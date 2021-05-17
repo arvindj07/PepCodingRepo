@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- canvas element  -->
+    <canvas id="board"></canvas>
+    <script>
+        // Board-> Canvas Element
+        let board = document.getElementById("board");
+        // height width of board
+        board.height = window.innerHeight;
+        board.width = window.innerWidth;
+        // 2d 
+        let tool = board.getContext("2d"); // tool is like the Pen we use on Board ,to draw
+        
+        // color-> black by default
+        tool.fillRect(0, 0, board.width / 2, board.height / 2); // x,y ,width,height
+        tool.fillStyle = "red"; // change Color
+        tool.fillRect(50, 50, board.width / 2, board.height / 2);
+        tool.fillRect(60, 60, board.width / 2, board.height / 2);
+        //    stroke color-> border of Rectangle
+        tool.strokeStyle = "green";
+        // thickness of the line
+        tool.lineWidth = 10;
+        tool.strokeRect(250, 300, board.width / 2, board.height / 2);
+    </script>
+</body>
+
+</html>

@@ -34,4 +34,4 @@
 ### Camera
 * https://developer.mozilla.org/en-US/docs/Web/API
 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-* https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Drawing_graphics
+* https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Drawing_graphics 
