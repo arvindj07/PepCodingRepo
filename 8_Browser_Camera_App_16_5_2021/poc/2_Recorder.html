@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- button to control start/stop of recording -->
+  <button id="record_video">Record</button>
+
+
+  <script>
+    // Record the VideoStream from Browser Page
+
+    // and, No need to View to VideoStream/MediaStream
+
+    let videoRecorder = document.querySelector("#record_video"); // Record Btn
+    let mediaRecorder; // to handle recording
+    let recordState = false; // store Start/Stop state of recording
+    let buffer = []; // to save recording
+    let constraints = {
+      video: true,
+      audio: true
+    }
+
+    let promise = navigator.mediaDevices.getUserMedia(constraints);
+    promise
+      .then(function (mediaStream) {
+        mediaRecorder = new MediaRecorder(mediaStream);// Handle recording
+
+        // Save Recording -> on mediaRecorder.start();
+        mediaRecorder.addEventListener("dataavailable",function(e){
+          // save recording in buffer
+          buffer.push(e.data);
+        })
+
+        // Download Recording -> on mediaRecorder.stop();
+        mediaRecorder.addEventListener("stop",function(e){
+          // Download from Browser
+          let blob=new Blob(buffer,{type:"video/mp4"});
+          let url= window.URL.createObjectURL(blob);
+
+          // download Btn
+          let a= document.createElement("a");
+          a.download="file.mp4";
+          a.href=url;
+          a.click(); // to trigger download
+
+          buffer=[]; // Clear Buffer for nxt Recording
+        })
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+
+    // Click on Record-Btn
+    videoRecorder.addEventListener("click", function (e) {
+      if(!mediaRecorder){
+        alert("Allow/Wait Permission");
+        return;
+      }
+      if (recordState == false) {
+        // Start Recording
+        mediaRecorder.start();
+        videoRecorder.innerHTML = "Recording...";
+      } else {
+        // Stop Recording
+        mediaRecorder.stop();
+        videoRecorder.innerHTML = "Record";
+      }
+      recordState = !recordState;// toggle-state
+    })
+
+  </script>
+
+</body>
+
+</html>
