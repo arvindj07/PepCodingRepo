@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <video class="video"  autoplay></video>
+  <audio class="audio" controls></audio>
+
+  
+  <script>
+    // To get access to camera and View the VideoStream on Browser Page
+    
+    let videoEle=document.querySelector("video");
+    let audioEle=document.querySelector("audio");
+
+    let constraints={
+      video:true,
+      audio:true
+    }
+
+    let promise=navigator.mediaDevices.getUserMedia(constraints);
+    promise
+    .then(function(mediaStream){
+      // Make the input Stream From Camera, visible on Video-Element of Page
+
+      // Set the VideoStream in Video/Audio-element
+      videoEle.srcObject=mediaStream;
+      audioEle.srcObject=mediaStream;
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+  </script>
+
+</body>
+</html>

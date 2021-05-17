@@ -23,14 +23,15 @@
 * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
 * https://github.com/kriskowal/q/blob/v1/design/README.md
 * https://www.youtube.com/watch?v=fyGSyqEX2dw&t=1311s
-
 ## Browser
 ### DOM
 * https://developer.mozilla.org/en-US/docs/Web/Events
-* https://javascript.info/introduction-browser-events
 * https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents
-* https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications#example_using_object_urls_to_display_images
-### Download File in DOM
-* https://htmldom.dev/download-a-file/
-### File Open in DOM
+* https://www.youtube.com/playlist?list=PL4cUxeGkcC9gfoKa5la9dsdCNpuey2s-V
+* https://javascript.info -> Part 2
 * https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications
+* https://htmldom.dev/download-a-file/
+### Camera
+* https://developer.mozilla.org/en-US/docs/Web/API
+* https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+* https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Drawing_graphics

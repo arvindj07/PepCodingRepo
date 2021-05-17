@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <div class="video_container">
+    <video class="video_element" autoplay></video>
+  </div>
+  <div class="Btn_conatiner">
+
+    <button  class="recorder">Record</button>
+  </div>
+
+  <script>
+    // Video Element
+    let videoWEle = document.querySelector(".video_element");
+
+    // Media-Stream
+    let constraints = {
+      video: true,
+      audio: true,
+    }
+
+    // Media-Recorder to Handle Start nd Stop of Recording
+    let mediaRecorder;
+    let buffer = [];
+
+    let mediaSteamPromise = navigator.mediaDevices.getUserMedia(constraints); // get Media-Stream
+
+    mediaSteamPromise
+      .then(function (mediaStream) {
+        // Display-Video Stream
+        videoWEle.srcObject=mediaStream;
+        // Set media-Recorder with Media-Stream
+        mediaRecorder = new MediaRecorder(mediaStream);
+
+
+        mediaRecorder.addEventListener("dataavailable", saveRecording);
+        function saveRecording(e) {
+          buffer.push(e.data);// save in Buffer
+        }
+
+        mediaRecorder.addEventListener("stop", dowloadRecording); 
+        function dowloadRecording(e) {
+          let blob= new Blob(buffer,{type:"video/mp4"});
+          const url= window.URL.createObjectURL(blob);
+          let a= document.createElement("a");
+          a.download="file.mp4";// download operation with file-name
+          a.href=url;
+          a.click();
+          buffer=[];  // clear-buffer
+        }
+
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+
+
+    // Record Button
+    let recordBtn = document.querySelector(".recorder");
+    let recordState = false;
+    recordBtn.addEventListener("click", recordVideo);
+    function recordVideo(e) {
+      if(!mediaRecorder){
+        console.log(mediaRecorder)
+        alert("Allow permissions");
+        return;
+      }
+      if (recordState == false) {
+        mediaRecorder.start();
+        recordBtn.innerHTML = "Recording";
+        recordState = true;
+      } else {
+        mediaRecorder.stop();
+        recordBtn.innerHTML = "Record";
+        recordState = false;
+      }
+    }
+  </script>
+
+
+
+</body>
+
+</html>

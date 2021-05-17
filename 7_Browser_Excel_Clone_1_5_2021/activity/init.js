@@ -29,7 +29,7 @@ grid.innerHTML = str;
 // WorkSheetDB -> stores info of each-sheet
 // SheetDB -> stores info of Each-cell in a Sheet
 
-workSheetDB = [];
+let workSheetDB = [];
 
 // func to initialise Current-Sheet-DB
 // func is Called when new-sheet is created

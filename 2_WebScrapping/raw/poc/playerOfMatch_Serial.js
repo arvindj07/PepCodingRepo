@@ -34,6 +34,7 @@ function extractMatch(html){
 
 // To request for Players-Link Serially
 function getPlayerSerially(allLinks,n){
+  // Base-case
   if(n== allLinks.length){
     return;
   }else{

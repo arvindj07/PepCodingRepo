@@ -136,9 +136,9 @@ function extractIssues(html,repoName,TopicName){
 
   // let filePath= path.join(__dirname,TopicName,repoName+".pdf");  
   // let pdfDoc = new PDFDocument;
-  // pdfDoc.pipe(fs.createWriteStream(filePath));
-  // pdfDoc.text(data);
-  // pdfDoc.end();  
+  // pdfDoc.pipe(fs.createWriteStream(filePath)); // create-file
+  // pdfDoc.text(data);   // write to file
+  // pdfDoc.end();        // close file
    
 }
 

@@ -1,0 +1,19 @@
+.video_container{
+ background-color: black;
+ height: 100vh;
+ width: 100vw;
+}
+
+.video_element{
+  width: 70%;
+  height: 100%;
+  background-color: white;
+}
+
+.recorder{
+  background-color: white;
+  position: fixed;
+  top: 10rem;
+  right: 10rem;
+  /* border-radius: 50%; */
+}

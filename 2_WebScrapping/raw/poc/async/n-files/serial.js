@@ -14,6 +14,7 @@ console.log("before");
 //     // break;
 // }
 function reader(arr, n) {
+    // base-case
     if (arr.length == n) {
         return;
     }

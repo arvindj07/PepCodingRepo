@@ -54,6 +54,7 @@ function getFirstName(FirstName) {
         console.log("I am outer but you can call me");
     }
     return function getFullName(lastName) {
+        // closure on 'FirstName'
         console.log("Hello ", FirstName, " ", lastName," ",a);
         fn();
     }
