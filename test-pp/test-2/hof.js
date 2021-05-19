@@ -60,6 +60,7 @@ function product(storage, ith) {
     return storage * ith;
 }
 // let product = arr.reduce(add);
+// Polyfill of reduce()
 function myReduce(arr, cb) {
     let storage = arr[0];
     for (let i = 1; i < arr.length; i++) {
