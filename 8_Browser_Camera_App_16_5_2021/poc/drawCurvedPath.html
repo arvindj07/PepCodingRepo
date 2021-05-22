@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0px;
+    }
+    .parent{
+      display: flex;
+      height: 4rem;
+      width: 10rem;
+      justify-content: space-evenly;
+    }
+    .color {
+      height: 70%;
+      width: 30%;
+    }
+
+    #red {
+      background-color: red;
+    }
+
+    #green {
+      background-color: green;
+    }
+
+    #yellow {
+      background-color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- canvas element  -->
+  <div class="parent">
+    <div class="color" id="red"></div>
+    <div class="color" id="green"></div>
+    <div class="color" id="yellow"></div>
+  </div>
+
+  <canvas id="board"></canvas>
+  <script>
+    // board-> Canvas element
+    let board = document.getElementById("board");
+    board.height = window.innerHeight;
+    board.width = window.innerWidth;
+
+
+
+    let tool = board.getContext("2d");
+    let mouseDown = false;
+
+    tool.lineWidth = 10;
+    tool.strokeStyle = "yellow";
+
+    // mouseDown-> Start-Drawing
+    document.addEventListener("mousedown", function (e) {
+      // get mouse-pointer x,y
+      let x = e.clientX;
+      let y = e.clientY;
+      tool.beginPath();
+      tool.moveTo(x, y);
+      mouseDown = true;
+    })
+
+    // mousemove-> Keep drawing when we move mouse,if Mouse is Down  
+    document.addEventListener("mousemove", function (e) {
+      let x = e.clientX;
+      let y = e.clientY;
+      // Draw only when mouse is down
+      if (mouseDown == true) {
+        tool.lineTo(x, y);
+        tool.stroke();
+      }
+    })
+
+    // mouseUp-> set mouseDown state to false, to stop drawing when we move mouse
+    document.addEventListener("mouseup", function (e) {
+      mouseDown = false;
+    })
+
+    let red = document.querySelector("#red");
+    let green = document.querySelector("#green");
+    let yellow = document.querySelector("#yellow");
+
+    red.addEventListener("click", function (e) {
+      tool.strokeStyle = "red";
+    })
+    green.addEventListener("click", function (e) {
+      tool.strokeStyle = "green";
+    })
+    yellow.addEventListener("click", function (e) {
+      tool.strokeStyle = "yellow";
+    })
+
+  </script>
+</body>
+
+</html>

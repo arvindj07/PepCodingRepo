@@ -1,0 +1,112 @@
+*{
+  box-sizing: border-box;
+}
+body{
+  margin: 0;
+}
+.video_container{
+ background-color: black;
+ height: 100vh;
+ width: 100vw;
+}
+
+.video{
+  width: 100%;
+  height: 100%;
+}
+
+/* button Styling */
+.record_btn,.capture-btn{
+  height: 4.5rem;
+  width: 4.5rem;  
+  border-radius: 50%;
+  border: none;
+  outline: none;
+}
+.record_btn{
+  background-color: red;
+}
+
+.btn-parent{
+  height: 7rem;
+  width: 7rem;
+  border: 0.5rem solid white;
+  position: fixed;
+  z-index: 6;
+  top: 30vh;
+  right: 3vw;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.capture-container{
+  top: 50vh;
+}
+
+ /* Animation-class for Record nd Capture Btn */
+.record-animation{
+  animation: scaleUp 1s ease-in infinite; 
+}
+.capture-animation{
+   animation: scaleUp 0.5s ease-in ; 
+}
+/* animation for Record/ Capture Btns */
+@keyframes scaleUp {
+   0% {
+       transform: scale(1);   
+   }
+   50% {
+       transform: scale(1.16);
+   }
+   100%{
+       transform: scale(1);
+   }
+}
+
+/* Image-Filters */
+.filter-container{
+   height:50vh;
+   width:4rem;
+   z-index: 6;
+   position: fixed;
+   top:10vh;
+   left:5vw;
+}
+.filter{
+  background-image: url("https://picsum.photos/id/237/200/300"); 
+  height: 20%;  
+  background-size: cover;
+  /* mix bg color width the  image */
+  background-blend-mode: color-burn;
+}
+
+ /* Recorder-Timing */
+.timing{
+   color:white;
+   position: fixed;
+   bottom :15vh;
+   left:3vw;
+   font-size: 1.7rem;
+   font-family: sans-serif;
+   font-weight: 600;
+   display: none;
+}
+ /* Make Timer visible  */
+.timing-active{
+   display: block;
+}
+
+/***************************************** Filter-Container  */
+.ui-filter{
+  height:100vh;
+  width:100vw;
+  position: fixed;
+  z-index:4;
+  display: none;
+
+}
+/* Make Filter Container Visible on Click of Filter  */
+.ui-filter-active{
+  display: block;
+}

@@ -2,7 +2,7 @@ let puppeteer = require('puppeteer');
 let {email,password}= require('../../secrets'); // get email-id nd pw
 let { codes } = require("./codes"); // locally stored code-soln
 
-let gtab; // To store reference of the New-Tab 
+let gtab; // To store reference of the New-Tab (Page)
 console.log("before");
 
 //  Browser launch kra
@@ -57,8 +57,9 @@ browserWillBeLaunchedPromise
 
     // call questionSolver, to solve each Question
     let fqsp=questionSolver(url,quesnObj.soln, quesnObj.qName);
-
+    // Loop to submit All Quesn(s)-> using Promise-Chaining to Solve questions Serially
     for(let i=1;i<codes.length;i++){
+      // fqsp=fqsp.then() => leads to Promise-Chaining
       fqsp=fqsp.then(function (){
         return questionSolver(url,codes[i].soln,codes[i].qName);  // return promise
       })
@@ -173,11 +174,11 @@ function typeAndCopyCode(code){
 }
 
 
-// the code, in this method will run inside browser console, coz of evaluate() func in puppeteer
+// the code, in this method will manipulate DOM, coz of page.evaluate() func in puppeteer
 // Func task- It will match the question passed from local with the question on pg and then click on it
 function selectQuestionFn(questionName){
   let allH4Ele= document.querySelectorAll("h4");
-  let textArr=[];
+  let textArr=[]; // To Store Ques-names in Page
 
   for(let i=0;i<allH4Ele.length;i++){
     let myQuestion= allH4Ele[i].innerText.split("\n")[0]; // only get question-name part

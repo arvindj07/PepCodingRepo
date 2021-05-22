@@ -6,91 +6,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-  <video controls autoplay></video>
-  <audio controls autoplay></audio>
-  <button id="record-video">Record</button>
+  <!-- Filter  -->
+  <div class="filter-container">
+    <div style="background-color: #f4a2613d" class="filter"></div>
+    <div style="background-color: #e85d0440" class="filter"></div>
+    <div style="background-color: #ad5d6d7a" class="filter"></div>
+    <div style="background-color: #2195f323" class="filter"></div>
+    <div style="background-color: #5a835b31" class="filter"></div>
+    <div class="filter"></div> <!--  No Filter  -->
+  </div>
 
-  <script>
+  <!-- Filter-Container to apply filter over UI -->
+  <div class="ui-filter ui-filter-active"></div>
+
+  <!-- Timer  -->
+  <div class="timing " id="timing">00:00:00</div>
+
+  <div class="video_container">
+    <video class="video" id="video_element" autoplay></video>
+  </div>
+  <div class="record-container btn-parent">
+    <button class="record_btn" id="record_video"></button>
+  </div>
+  <div class="capture-container btn-parent">
+    <button class="capture-btn" id="capture"></button>
+  </div>
 
 
-    let videoEle = document.querySelector("video");
-    let audioEle = document.querySelector("audio");
 
-    // Constraints to be Set
-    let constraints = {
-      video: true,
-      audio: true,
-    }
-
-    let mediaRecorder;
-    let buffer = [];
-
-    // Media-Stream
-    let mediaPromise = navigator.mediaDevices.getUserMedia(constraints);
-
-    mediaPromise
-      .then(function (mediaStream) {
-        //feed
-        // videoEle.srcObject = mediaStream;
-        // audioEle.srcObject = mediaStream;
-
-        // Handle Media-Stream on click on Btn
-        mediaRecorder = new MediaRecorder(mediaStream);
-        // Event triggered when Recording is Started
-        mediaRecorder.addEventListener("dataavailable",saveVideoInBuffer);
-        function saveVideoInBuffer(e){
-          buffer.push(e.data);
-        }
-
-        // Event triggered when Recording is Stopped
-        mediaRecorder.addEventListener("stop",downloadVideo);
-        function downloadVideo(e){
-          // mime type
-          // convert Data to be dowloaded to Blob
-          let blob= new Blob(buffer,{type:"video/mp4"});
-          // file ko URL mei Represent krna
-          // blob convert-> url
-          const url= window.URL.createObjectURL(blob);
-          let a= document.createElement("a");
-          a.download="file.mp4";// download operation with file-name
-          a.href=url;
-          a.click();
-        }
-
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-
-    let videoRecorder = document.querySelector("#record-video");
-    let recordState = false;
-
-    // Record-Btn-> To Start/Stop Recording
-    videoRecorder.addEventListener("click", startOrStopRecording);
-
-    function startOrStopRecording (e) {
-      if(!mediaRecorder){
-        alert("First allow Permission")
-        return;
-      }
-      if(recordState==false){
-        let videoRecorder=e.currentTarget;
-        mediaRecorder.start();
-        videoRecorder.innerHTML="Recording..";
-        recordState=true;
-      }else{
-        mediaRecorder.stop();
-        videoRecorder.innerHTML="Record";
-        recordState=false;
-      }
-    }
-
-  </script>
-
+  <script src="./script.js"></script>
 </body>
 
 </html>
