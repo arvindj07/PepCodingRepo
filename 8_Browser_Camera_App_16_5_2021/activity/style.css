@@ -15,7 +15,7 @@ body{
   height: 100%;
 }
 
-/* button Styling */
+/***************************** Button Styling */
 .record_btn,.capture-btn{
   height: 4.5rem;
   width: 4.5rem;  
@@ -27,6 +27,7 @@ body{
   background-color: red;
 }
 
+/* Parent Btn-Container */
 .btn-parent{
   height: 7rem;
   width: 7rem;
@@ -44,7 +45,7 @@ body{
   top: 50vh;
 }
 
- /* Animation-class for Record nd Capture Btn */
+ /****************** Animation-class for Record nd Capture Btn */
 .record-animation{
   animation: scaleUp 1s ease-in infinite; 
 }

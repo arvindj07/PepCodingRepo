@@ -44,7 +44,7 @@ promise
     console.log(err);
   })
 
-// Click on Record-Btn
+// Video Record-Btn
 videoRecorder.addEventListener("click", function (e) {
   if (!mediaRecorder) {
     alert("Allow/Wait Permission");
@@ -65,13 +65,13 @@ videoRecorder.addEventListener("click", function (e) {
 })
 
 
-// on Clicking Capture-Btn, Capture Image and Download it 
+// Capture-Btn->  Capture Image and Download it 
 capturebtn.addEventListener("click", function () {
   // create a canvas element , equal to size of your video frame
   let canvas = document.createElement("canvas");
   canvas.width = videoEle.videoWidth;
   canvas.height = videoEle.videoHeight;
-  let tool = canvas.getContext("2d");
+  let tool = canvas.getContext("2d"); // get Tool
   capturebtn.classList.add("capture-animation"); // add animation
   // draw a Image/Video-frame on that canvas
   tool.drawImage(videoEle, 0, 0);
@@ -82,7 +82,7 @@ capturebtn.addEventListener("click", function () {
   }
   // convert Canvas to Link 
   let link = canvas.toDataURL();
-  // download 
+  // Download 
   let anchor = document.createElement("a");
   anchor.href = link;
   anchor.download = "file.png";

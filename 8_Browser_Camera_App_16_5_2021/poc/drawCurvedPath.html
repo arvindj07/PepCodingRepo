@@ -10,15 +10,20 @@
     body {
       margin: 0px;
     }
-    .parent{
+
+    .parent {
+      border: 3px solid;
+      height: 5rem;
+      width: 60vw;
+      margin: 0 auto;
       display: flex;
-      height: 4rem;
-      width: 10rem;
       justify-content: space-evenly;
+      align-items: center;
     }
+
     .color {
       height: 70%;
-      width: 30%;
+      width: 20%;
     }
 
     #red {
@@ -36,7 +41,7 @@
 </head>
 
 <body>
-  <!-- canvas element  -->
+  <!-- Color Selector  -->
   <div class="parent">
     <div class="color" id="red"></div>
     <div class="color" id="green"></div>
@@ -44,25 +49,24 @@
   </div>
 
   <canvas id="board"></canvas>
+
+  <!-- Code  -->
   <script>
-    // board-> Canvas element
+    let parent=document.querySelector(".parent");
     let board = document.getElementById("board");
     board.height = window.innerHeight;
     board.width = window.innerWidth;
-
-
-
     let tool = board.getContext("2d");
     let mouseDown = false;
 
     tool.lineWidth = 10;
     tool.strokeStyle = "yellow";
-
     // mouseDown-> Start-Drawing
     document.addEventListener("mousedown", function (e) {
       // get mouse-pointer x,y
       let x = e.clientX;
       let y = e.clientY;
+      y=getCoordinates(y); // adjust Y
       tool.beginPath();
       tool.moveTo(x, y);
       mouseDown = true;
@@ -72,6 +76,7 @@
     document.addEventListener("mousemove", function (e) {
       let x = e.clientX;
       let y = e.clientY;
+      y=getCoordinates(y); // adjust Y
       // Draw only when mouse is down
       if (mouseDown == true) {
         tool.lineTo(x, y);
@@ -84,6 +89,7 @@
       mouseDown = false;
     })
 
+    // Color Selector and Events
     let red = document.querySelector("#red");
     let green = document.querySelector("#green");
     let yellow = document.querySelector("#yellow");
@@ -97,6 +103,12 @@
     yellow.addEventListener("click", function (e) {
       tool.strokeStyle = "yellow";
     })
+
+    // Adjust y-coordinate of board w.r.t e.clientY of mouse-event
+    function getCoordinates(initialY) {
+      let obj = parent.getBoundingClientRect();
+      return initialY - obj.height;
+    }
 
   </script>
 </body>
