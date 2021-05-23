@@ -6,6 +6,9 @@ let clearObj; // setInterval- clearObj
 let allFilters = document.querySelectorAll(".filter"); // get All-Filter Elements
 let uiFilter = document.querySelector(".ui-filter");  // UI- Filter Container
 let filterColor = ""; // current Filter-Color
+let zoomInElem = document.querySelector("#plus-container");// Zoom-IN element
+let zoomOutElem = document.querySelector("#minus-container");// Zoom-Out element
+let zoomLevel = 1; // Zoom-Level Info
 let mediaRecorder; // to handle recording
 let recordState = false; // store Start/Stop state of recording
 let buffer = []; // to save recording
@@ -72,9 +75,14 @@ capturebtn.addEventListener("click", function () {
   canvas.width = videoEle.videoWidth;
   canvas.height = videoEle.videoHeight;
   let tool = canvas.getContext("2d"); // get Tool
-  capturebtn.classList.add("capture-animation"); // add animation
+  capturebtn.classList.add("capture-animation"); // add animation-class
+  // Zoom-In/Out in Canvas
+  tool.scale(zoomLevel, zoomLevel);
+  // To Implement center-Zoom
+  let x = (canvas.width / zoomLevel - canvas.width) / 2;
+  let y = (canvas.height / zoomLevel - canvas.height) / 2;
   // draw a Image/Video-frame on that canvas
-  tool.drawImage(videoEle, 0, 0);
+  tool.drawImage(videoEle, x, y);
   // draw Filter over Image on Canvas
   if (filterColor) {
     tool.fillStyle = filterColor;
@@ -139,4 +147,19 @@ for (let i = 0; i < allFilters.length; i++) {
     }
   })
 }
+
+// UI of Zoom-In
+zoomInElem.addEventListener("click", function () {
+  if (zoomLevel < 3) {
+    zoomLevel += 0.2;
+    videoEle.style.transform = `scale(${zoomLevel})`;
+  } 
+})
+// UI of Zoom-Out
+zoomOutElem.addEventListener("click", function () {
+  if (zoomLevel > 1) {
+    zoomLevel -= 0.2;
+    videoEle.style.transform = `scale(${zoomLevel})`;
+  } 
+})
 

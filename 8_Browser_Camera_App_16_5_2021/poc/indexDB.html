@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <input type="text" id="txnDB">
+  <input type="number" id="version">
+  <button id="createDb">Create</button>
+  <button id="addNote">Add Note</button>
+  <button id="view">Data</button>
+
+  <!-- Code  -->
+  <script>
+    let db; // Database
+    let count = 1;  // count of data entry in Table
+    let createbtn = document.querySelector("#createDb");
+    let addbtn = document.querySelector("#addNote");
+    let viewbtn = document.querySelector("#view");
+
+    // DB
+    createbtn.addEventListener("click", function (e) {
+      // Create DB
+      let dbn = document.querySelector("#txnDB").value;// Db-name
+      let v = document.querySelector("#version").value; // db-version
+      // Open DB or CreateDB if it doesnt exist already
+      let request = indexedDB.open(dbn, v);
+
+      request.addEventListener("success", function (e) {
+        db = e.target.result;
+        console.log("success");
+      })
+
+      request.addEventListener("error", function (e) {
+        console.log(e);
+        console.log("error");
+      })
+
+      request.addEventListener("upgradeneeded", function (e) {
+        // Create Table/Collection for DB
+        db = e.target.result;
+        console.log("Upgraded");
+        if (db) {
+          // Table named-notes
+          db.createObjectStore("notes", { keyPath: "nId" });
+        }
+
+      })
+    })
+
+    addbtn.addEventListener("click", function (e) {
+      if (db) {
+        // Entry of Each Table .ie, key-value Pair
+        // key-> represents column-name
+        // value-> represents column-value
+        let note = {
+          nId: count,
+          txt: "I am a note " + count,
+          npt:"heee"
+        }
+        count++;
+
+        let tx = db.transaction("notes", "readwrite"); // Operation/Transaction to apply on Table
+        let notesStore = tx.objectStore("notes"); // get Table
+        notesStore.add(note); // add entry to Table
+      }
+    })
+
+    viewbtn.addEventListener("click", function () {
+      if (db) {
+        let tx = db.transaction("notes", "readonly");
+        let notesStore = tx.objectStore("notes"); // get Table
+
+        // async
+        let pendingAns = notesStore.openCursor(); // read from Table
+        pendingAns.addEventListener("success", function (e) {
+          let cursor = pendingAns.result; // data inside Table
+          if (cursor) {
+            console.log(cursor.value);
+            cursor.continue();  // to continue reading each data from table
+          }
+        })
+      }
+      else {
+        alert("Db is still Loading")
+      }
+    })
+
+
+
+  </script>
+
+</body>
+
+</html>
