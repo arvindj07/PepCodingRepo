@@ -40,3 +40,6 @@
 ### Canvas Api
 * https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Drawing_graphics
 * https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap 
+### IndexDB
+* https://javascript.info/indexeddb
+* https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB

@@ -24,12 +24,12 @@ promise
     videoEle.srcObject = mediaStream;
     mediaRecorder = new MediaRecorder(mediaStream);// Handle recording
 
-    // Save Recording -> on mediaRecorder.start();
+    // Start Recording -> on mediaRecorder.start();
     mediaRecorder.addEventListener("dataavailable", function (e) {
       buffer.push(e.data);
     })
 
-    // Download Recording -> on mediaRecorder.stop();
+    // Stop Recording -> on mediaRecorder.stop();
     mediaRecorder.addEventListener("stop", function (e) {
       // Download from Browser
       let blob = new Blob(buffer, { type: "video/mp4" });
@@ -117,7 +117,7 @@ function startCounting() {
     minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     let hours = Number.parseInt(timeCount / 3600);
     hours = hours < 10 ? `0${hours}` : `${hours}`;
-    timingELem.innerText = `${hours}:${minutes}:${seconds}`;
+    timingELem.innerText = `${hours}:${minutes}:${seconds}`; // Set Timer-UI
     timeCount++;
   }, 1000);
 }
@@ -129,7 +129,7 @@ function stopCounting() {
   clearInterval(clearObj);  // Stop setInterval()
 }
 
-// Filter Apply to UI
+// Filter-> Apply Filter to UI
 for (let i = 0; i < allFilters.length; i++) {
   allFilters[i].addEventListener("click", function () {
     let color = allFilters[i].style.backgroundColor

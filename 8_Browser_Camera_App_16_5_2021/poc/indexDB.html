@@ -12,7 +12,7 @@
 
   <input type="text" id="txnDB">
   <input type="number" id="version">
-  <button id="createDb">Create</button>
+  <button id="createDb">Open/Create</button>
   <button id="addNote">Add Note</button>
   <button id="view">Data</button>
 
@@ -27,7 +27,7 @@
     // DB
     createbtn.addEventListener("click", function (e) {
       // Create DB
-      let dbn = document.querySelector("#txnDB").value;// Db-name
+      let dbn = document.querySelector("#txnDB").value;// Db-name 
       let v = document.querySelector("#version").value; // db-version
       // Open DB or CreateDB if it doesnt exist already
       let request = indexedDB.open(dbn, v);
@@ -59,6 +59,8 @@
         // Entry of Each Table .ie, key-value Pair
         // key-> represents column-name
         // value-> represents column-value
+
+        // data to be added to Table
         let note = {
           nId: count,
           txt: "I am a note " + count,
@@ -66,7 +68,7 @@
         }
         count++;
 
-        let tx = db.transaction("notes", "readwrite"); // Operation/Transaction to apply on Table
+        let tx = db.transaction("notes", "readwrite"); // Create Transaction on table
         let notesStore = tx.objectStore("notes"); // get Table
         notesStore.add(note); // add entry to Table
       }
