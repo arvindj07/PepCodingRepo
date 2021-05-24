@@ -22,7 +22,7 @@ function reader(arr, n) {
             console.log(err);
         } else {
             console.log("data->"+ data);
-            reader(arr, n + 1);
+            reader(arr, n + 1); // Recursive-Call
         }
     })
     

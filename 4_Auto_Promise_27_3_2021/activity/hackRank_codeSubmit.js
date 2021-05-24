@@ -12,6 +12,7 @@ let browserWillBeLaunchedPromise= puppeteer.launch({
   args:["--start-maximized"],
 });
 
+// ************************************* Main-Code
 browserWillBeLaunchedPromise
   .then(function (browserInstance){    
     //  New-Tab open kiya             
@@ -56,7 +57,7 @@ browserWillBeLaunchedPromise
     let quesnObj= codes[0];
 
     // call questionSolver, to solve each Question
-    let fqsp=questionSolver(url,quesnObj.soln, quesnObj.qName);
+    let fqsp=questionSolver(url,quesnObj.soln, quesnObj.qName); // 1st Question
     // Loop to submit All Quesn(s)-> using Promise-Chaining to Solve questions Serially
     for(let i=1;i<codes.length;i++){
       // fqsp=fqsp.then() => leads to Promise-Chaining

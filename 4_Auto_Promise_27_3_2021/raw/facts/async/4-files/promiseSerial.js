@@ -21,20 +21,20 @@ console.log("before");
 
 
 // improvement
-let frp = fs.readFile("../f1.txt");
+let frp = fs.readFile("../f1.txt"); 
 frp.then(cb).then(cb2).then(cb3).catch(function (err) {
    console.log("Inside catch");
 })
 function cb(data) {
-    console.log("content->" + data);
-    let f2rP = fs.readFile("../f2.txt");
+    console.log("content->" + data); // File-1 Data
+    let f2rP = fs.readFile("../f2.txt"); 
     return f2rP;
 }
 function cb2(data) {
-    console.log("content->" + data);
+    console.log("content->" + data); // File-2 Data
     let f3rP = fs.readFile("../f3.txt");
     return f3rP;
 }
 function cb3(data) {
-    console.log("content->" + data);
+    console.log("content->" + data);// File-3 Data
 }
