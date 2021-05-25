@@ -93,7 +93,7 @@ function waitAndClick(selector){
   })
 }
 
-// function- to solve Each question
+// Promise-Based function- to solve Each question
 function questionSolver(modulePageurl, code, questionName){
   return new Promise(function (resolve,reject){
     // warm-up wale pg pe jana ,i.e, module-page

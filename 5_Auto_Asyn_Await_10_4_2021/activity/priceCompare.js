@@ -154,7 +154,7 @@ function getProductNames(nameSelector, priceSelector) {
         let p_name = productNames[i].innerText;     // product name
         let p_price = productPrices[i].innerText;   // product price
 
-        // store as array of object
+        // add an object
         details.push({
             p_name,
             p_price
