@@ -68,7 +68,7 @@ let email = process.argv[3];
 // Scroll-Page
 function scrollPage(leftPane, nameSelector) {
   let ele = document.querySelectorAll(leftPane);  // left-Pane Element
-  ele[1].scrollTop = ele[1].scrollHeight;
+  ele[1].scrollTop = ele[1].scrollHeight; // Code to Perform-Scroll
   let resNameArrEle = document.querySelectorAll(nameSelector);      // Name elements
   console.log(resNameArrEle.length);
   return resNameArrEle.length

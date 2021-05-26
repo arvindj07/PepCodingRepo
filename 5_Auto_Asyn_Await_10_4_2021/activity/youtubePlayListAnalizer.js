@@ -36,13 +36,13 @@ let fs = require("fs");
 
     // get total no. of videos loaded , after scrolling till bottom of page
     let pCurrentVideoCount = await scrollToBottom(page, titleSelector);
-
+    
     // scroll down the page , till the no. of loaded videos is approx equal to total no. of videos in playlist
     while (videosCount - 50 > pCurrentVideoCount) { // -50 ka hum jugad lga rhe h, to terminate the loop
       pCurrentVideoCount = await scrollToBottom(page, titleSelector);
     }
 
-    // Get the Title nd Duration of all Videos in Playlist after every video gets loaded, after scrolling down till bottom
+    // Get the Title nd Duration of all Videos in Playlist after every video gets loaded, i.e, after scrolling down till bottom
     let timeDurArr = await page.evaluate(getStats, durationSelector, titleSelector);
     console.table(timeDurArr);  
 
@@ -87,7 +87,7 @@ async function scrollToBottom(page, title) {
 
   // scroll-to-bottom nd return total no. of videos/titles loaded (Done inside DOM)
   function getLengthConsoleFn(title) {
-    window.scrollBy(0, window.innerHeight); // scroll till bottom
+    window.scrollBy(0, window.innerHeight); // scroll-window till bottom
     let titleElemArr = document.querySelectorAll(title);  // select all video-titles loaded
     
     return titleElemArr.length; // return the length, ie, total no. of videos loaded
