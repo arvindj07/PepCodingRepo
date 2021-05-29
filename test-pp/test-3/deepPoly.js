@@ -14,7 +14,7 @@ let superClone = (object) => {
     let cloning = {};
     // [fn,lastName,address]
     Object.keys(object).map((prop) => {
-        if (Array.isArray(object[prop])) {
+        if (Array.isArray(object[prop])) { // array
             // copy array 
             // cloning[prop]= [].concat(object[prop]);
             
@@ -25,8 +25,8 @@ let superClone = (object) => {
             // cloning[prop]=newArr;
             cloning[prop]=[...object[prop]];
         } else if (typeof object[prop] === "object") {
-            cloning[prop] = superClone(object[prop]);
-        } else cloning[prop] = object[prop];
+            cloning[prop] = superClone(object[prop]);   // object
+        } else cloning[prop] = object[prop];        // value
     });
 
     return cloning;
