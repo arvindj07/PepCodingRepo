@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <!-- Script for React-Algo  -->
+  <!-- Script for React-Algo  -->
   <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
   <!-- React-Dom  -->
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-    <!-- Babel  -->
+  <!-- Babel  -->
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
   <title>Document</title>
@@ -18,20 +18,31 @@
 <body>
 
   <div id="root"></div>
+
+   <!-- script-type -> text/babel to use JSX in script  -->
   <script type="text/babel">
 
-  // functional component
-  function Hello(){
-    return(
-      // JSX code only
-      <h1>Hello</h1>
+    //functional Component
+    function Hello({ person = 'Default', age = '0' }) {
+      return (
+        //JSX Code only
+        <h1>Hello {person} Age {age} </h1>
+      )
+    }
+    function Hellos() {
+      return (
+        <React.Fragment>
+          <Hello person='Tushar' age='21' />
+          <Hello person='Alexander' />
+          <Hello />
+          <Hello />
+        </React.Fragment>
+      )
+    }
 
-    )
-  }
+    // To Attach Func-Component to DOM element- <div id="root"></div>
+    ReactDOM.render(<Hellos />, document.querySelector("#root"));
 
-  // To Attach Func-Component to DOM element- <div id="root"></div>
-  ReactDOM.render(<Hello/>,document.querySelector("#root"));
-  
   </script>
 
 </body>
